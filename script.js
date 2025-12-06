@@ -1,67 +1,54 @@
-/* ------------------------------------------------
-   WAIT FOR PAGE TO LOAD
-   ------------------------------------------------ */
 document.addEventListener('DOMContentLoaded', () => {
 
     /* ------------------------------------------------
-       THEME SWITCHER LOGIC
+       REAL-TIME THEME ENGINE
        ------------------------------------------------ */
-    const themes = [
-        {   // 1. CYAN (Default)
-            '--bg-color': '#0b0c10',
-            '--card-bg': 'rgba(31, 40, 51, 0.8)',
-            '--accent-color': '#66fcf1',
-            '--secondary-color': '#45a29e',
-            '--card-border': 'rgba(102, 252, 241, 0.1)'
-        },
-        {   // 2. NEON GREEN (Matrix)
-            '--bg-color': '#000000',
-            '--card-bg': 'rgba(20, 50, 20, 0.8)',
-            '--accent-color': '#00ff41',
-            '--secondary-color': '#008f11',
-            '--card-border': 'rgba(0, 255, 65, 0.1)'
-        },
-        {   // 3. RETRO PURPLE (Synthwave)
-            '--bg-color': '#1a0b2e',
-            '--card-bg': 'rgba(40, 20, 60, 0.8)',
-            '--accent-color': '#d16eff',
-            '--secondary-color': '#9b26b6',
-            '--card-border': 'rgba(209, 110, 255, 0.1)'
-        },
-        {   // 4. BLAZING ORANGE (Fire)
-            '--bg-color': '#1a100b',
-            '--card-bg': 'rgba(60, 30, 20, 0.8)',
-            '--accent-color': '#ff7b00',
-            '--secondary-color': '#b33b00',
-            '--card-border': 'rgba(255, 123, 0, 0.1)'
-        }
-    ];
+    const settingsBtn = document.getElementById('settings-btn');
+    const panel = document.getElementById('control-panel');
+    const root = document.documentElement;
 
-    let currentThemeIndex = 0;
-    const themeButton = document.getElementById('theme-toggle');
-
-    // ERROR CHECK: Does the button actually exist?
-    if (themeButton) {
-        themeButton.addEventListener('click', () => {
-            // Cycle to next theme
-            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
-            const newTheme = themes[currentThemeIndex];
-
-            // Apply Variables
-            const root = document.documentElement;
-            root.style.setProperty('--bg-color', newTheme['--bg-color']);
-            root.style.setProperty('--card-bg', newTheme['--card-bg']);
-            root.style.setProperty('--accent-color', newTheme['--accent-color']);
-            root.style.setProperty('--secondary-color', newTheme['--secondary-color']);
-            root.style.setProperty('--card-border', newTheme['--card-border']);
-
-            // Update particles immediately
-            if(particlesArray) {
-                particlesArray.forEach(p => p.color = newTheme['--secondary-color']);
+    // 1. TOGGLE MENU OPEN/CLOSE
+    if(settingsBtn && panel) {
+        settingsBtn.addEventListener('click', () => {
+            if (panel.style.display === 'none') {
+                panel.style.display = 'block';
+            } else {
+                panel.style.display = 'none';
             }
         });
-    } else {
-        console.error("Theme button not found! Check your HTML ID.");
+    }
+
+    // 2. ACCENT COLOR LISTENER
+    const pickerAccent = document.getElementById('picker-accent');
+    if(pickerAccent) {
+        pickerAccent.addEventListener('input', (e) => {
+            const newColor = e.target.value;
+            root.style.setProperty('--accent-color', newColor);
+            // Also update the border color variable to match
+            root.style.setProperty('--card-border', newColor + '20'); // Adding opacity hex
+        });
+    }
+
+    // 3. SECONDARY COLOR LISTENER (Particles)
+    const pickerSecondary = document.getElementById('picker-secondary');
+    if(pickerSecondary) {
+        pickerSecondary.addEventListener('input', (e) => {
+            const newColor = e.target.value;
+            root.style.setProperty('--secondary-color', newColor);
+            
+            // Update Particles Instantly
+            if(particlesArray) {
+                particlesArray.forEach(p => p.color = newColor);
+            }
+        });
+    }
+
+    // 4. BACKGROUND COLOR LISTENER
+    const pickerBg = document.getElementById('picker-bg');
+    if(pickerBg) {
+        pickerBg.addEventListener('input', (e) => {
+            root.style.setProperty('--bg-color', e.target.value);
+        });
     }
 
 
@@ -71,8 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById("background-canvas");
     if (canvas) {
         const ctx = canvas.getContext("2d");
-        
-        // Resize canvas to fill parent (Hero Section)
         canvas.width = canvas.parentElement.offsetWidth;
         canvas.height = canvas.parentElement.offsetHeight;
 
@@ -85,23 +70,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.directionX = (Math.random() * 1) - 0.5;
                 this.directionY = (Math.random() * 1) - 0.5;
                 this.size = (Math.random() * 2) + 1;
-                
-                // Grab color safely
+                // Get initial color
                 const cssColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim();
-                this.color = cssColor || '#45a29e'; // Fallback if variable is missing
+                this.color = cssColor || '#45a29e'; 
             }
-
             draw() {
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
                 ctx.fillStyle = this.color;
                 ctx.fill();
             }
-
             update() {
                 if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
                 if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
-
                 this.x += this.directionX;
                 this.y += this.directionY;
                 this.draw();
@@ -119,7 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
         function animate() {
             requestAnimationFrame(animate);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             for (let i = 0; i < particlesArray.length; i++) {
                 particlesArray[i].update();
             }
@@ -156,11 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
         animate();
     }
 
-
     /* ------------------------------------------------
-       TYPEWRITER & CLOCK LOGIC
+       TYPEWRITER & CLOCK LOGIC (Keep existing logic)
        ------------------------------------------------ */
-    
     // Typewriter
     const words = ["CS Student.", "Problem Solver.", "C Developer.", "Tech Enthusiast."];
     let i = 0;
@@ -168,11 +146,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function typeWriter() {
         const heading = document.getElementById("typewriter");
-        if (!heading) return; 
-        
+        if (!heading) return;
         const currentWord = words[i % words.length];
         const fullText = heading.innerText;
-
         if (heading.getAttribute("data-state") === "deleting") {
             heading.innerText = currentWord.substring(0, fullText.length - 1);
             timer = setTimeout(typeWriter, 50);
@@ -190,14 +166,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
-    
     const twElement = document.getElementById("typewriter");
     if(twElement) {
         twElement.setAttribute("data-state", "typing");
         typeWriter();
     }
 
-    // Clock
+    // Clock Logic
     function updateTimeAndGreeting() {
         const now = new Date();
         const seconds = now.getSeconds();
@@ -219,7 +194,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const displayMin = minutes < 10 ? '0' + minutes : minutes;
         const displayHour = hours % 12 || 12; 
         const ampm = hours >= 12 ? 'PM' : 'AM';
-        
         const dTime = document.getElementById('digital-time');
         if(dTime) dTime.innerText = `${displayHour}:${displayMin} ${ampm}`;
 
@@ -228,11 +202,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (hours < 12) greetingText = "Good Morning!";
         else if (hours < 18) greetingText = "Good Afternoon!";
         else greetingText = "Good Evening!";
-        
         if(greetingElement) greetingElement.innerText = greetingText;
     }
-
     updateTimeAndGreeting();
     setInterval(updateTimeAndGreeting, 1000);
 
-}); // End DOMContentLoaded
+});
