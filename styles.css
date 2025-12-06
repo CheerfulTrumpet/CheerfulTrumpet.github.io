@@ -1,12 +1,12 @@
-/* RESET AND CORE STYLES */
+/* RESET AND CORE STYLES (UPDATE) */
 body {
-    margin: 0;
-    padding: 0;
-    /* A deep, professional "IDE" dark grey - the base background */
+    margin: 0; 
+    padding: 0; /* Ensures the body starts right at the top */
+    /* ... keep the rest of the existing code ... */
     background-color: #0b0c10;
     color: #c5c6c7;
     font-family: 'Segoe UI', sans-serif;
-    overflow-x: hidden; /* Prevent side scroll */
+    overflow-x: hidden;
 }
 
 /* THE CANVAS STYLING */
