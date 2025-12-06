@@ -1,4 +1,8 @@
-// 1. Toggle the Menu Open/Close
+/* ------------------------------------------------
+   1. GLOBAL THEME FUNCTIONS (Must be at the top)
+   ------------------------------------------------ */
+
+// Toggle the Menu Open/Close
 window.toggleThemeMenu = function() {
     const panel = document.getElementById('control-panel');
     if (panel.style.display === 'none' || panel.style.display === '') {
@@ -6,43 +10,46 @@ window.toggleThemeMenu = function() {
     } else {
         panel.style.display = 'none';
     }
-}
+};
 
-// 2. Handle Color Changes
+// Handle Color Changes from the inputs
 window.changeTheme = function(type, color) {
     const root = document.documentElement;
     
     if (type === 'accent') {
         root.style.setProperty('--accent-color', color);
-        root.style.setProperty('--card-border', color + '20'); // Add transparency
+        root.style.setProperty('--card-border', color + '20');
     } 
     else if (type === 'secondary') {
         root.style.setProperty('--secondary-color', color);
         // Force particles to update immediately
-        if (typeof particlesArray !== 'undefined') {
-            particlesArray.forEach(p => p.color = color);
+        if (window.particlesArray) {
+            window.particlesArray.forEach(p => p.color = color);
         }
     } 
     else if (type === 'bg') {
         root.style.setProperty('--bg-color', color);
     }
-}
-
+};
 
 /* ------------------------------------------------
-   PAGE LOAD LOGIC (Canvas, Typewriter, Clock)
+   2. PAGE LOAD LOGIC
    ------------------------------------------------ */
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // Initialize Animations Library
+    if(typeof AOS !== 'undefined') {
+        AOS.init();
+    }
 
     /* --- PARTICLE NETWORK --- */
     const canvas = document.getElementById("background-canvas");
     if (canvas) {
         const ctx = canvas.getContext("2d");
-        // Ensure canvas matches container size
         canvas.width = canvas.parentElement.offsetWidth;
         canvas.height = canvas.parentElement.offsetHeight;
 
-        window.particlesArray = []; // Make global so the theme changer can find it
+        window.particlesArray = [];
 
         class Particle {
             constructor() {
@@ -51,8 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.directionX = (Math.random() * 1) - 0.5;
                 this.directionY = (Math.random() * 1) - 0.5;
                 this.size = (Math.random() * 2) + 1;
-                
-                // Get color from CSS variable
                 const cssColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim();
                 this.color = cssColor || '#45a29e'; 
             }
@@ -172,7 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const displayMin = minutes < 10 ? '0' + minutes : minutes;
         const displayHour = hours % 12 || 12; 
         const ampm = hours >= 12 ? 'PM' : 'AM';
-        
         const dTime = document.getElementById('digital-time');
         if(dTime) dTime.innerText = `${displayHour}:${displayMin} ${ampm}`;
 
@@ -185,4 +189,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     updateTimeAndGreeting();
     setInterval(updateTimeAndGreeting, 1000);
+    
+    /* --- PHILOSOPHY QUOTE --- */
+    const quotes = [
+        "The question of whether a computer can think is no more interesting than the question of whether a submarine can swim. - Dijkstra",
+        "It is not enough to have a good mind; the main thing is to use it well. - Descartes",
+        "Simplicity is the ultimate sophistication. - Da Vinci",
+        "Code is like humor. When you have to explain it, it’s bad. - Cory House"
+    ];
+    const quoteElement = document.getElementById("philosophy-quote");
+    if(quoteElement) {
+        quoteElement.innerText = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
+    }
 });
