@@ -32,13 +32,15 @@ h1, h2, h3, h4 {
 
 /* Hero Section Background (We removed the background gradient to let the particles show) */
 .hero-section {
+    /* Ensure it starts exactly at the very top of the screen */
+    margin-top: 0; 
+    padding-top: 0;
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    /* Removed old background: linear-gradient() to allow canvas to be visible */
-    background: none;
+    background: none; /* Crucial: Must be none to see the particles */
 }
 
 /* Profile Cards (Frosted Glass Effect for visibility over particles) */
