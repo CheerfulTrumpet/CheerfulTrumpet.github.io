@@ -125,16 +125,51 @@ h1, h2, h3, h4, .text-accent { color: var(--accent-color) !important; transition
 }
 
 /* --- PERSONAL PHOTOS --- */
-.photo-frame img {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    /* Ensure images fill their container nicely */
-    width: 100%; 
-    height: auto;
-    object-fit: cover; /* Prevents stretching if images aren't perfect aspect ratio */
-    aspect-ratio: 4 / 3; /* Enforces a consistent rectangular shape */
+/* --- PERSONAL PHOTOS & HOVER CAPTIONS --- */
+.photo-frame {
+    position: relative; /* Crucial: Makes the absolute caption sit inside this box */
+    overflow: hidden;   /* Ensures caption doesn't spill out on rounded corners */
+    border-radius: 8px; /* Rounds the corners of the whole frame */
 }
 
+.photo-frame img {
+    transition: transform 0.5s ease;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    aspect-ratio: 4 / 3;
+    display: block; /* Removes tiny gap at bottom of images */
+}
+
+/* The text overlay container */
+.photo-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    /* Semi-transparent black background for readability */
+    background: rgba(0, 0, 0, 0.7); 
+    color: white; /* Text is always white for contrast */
+    padding: 15px;
+    text-align: center;
+    font-weight: 500;
+    
+    /* Hide it by default */
+    opacity: 0;
+    /* Push it down slightly so it slides up */
+    transform: translateY(20px); 
+    transition: all 0.4s ease-in-out;
+}
+
+/* HOVER STATES */
+
+/* 1. Zoom image */
 .photo-frame:hover img {
-    transform: translateY(-5px) scale(1.02); /* Slight lift and zoom */
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important; /* Deeper shadow on hover */
+    transform: scale(1.1);
+}
+
+/* 2. Reveal caption */
+.photo-frame:hover .photo-caption {
+    opacity: 1; /* Make visible */
+    transform: translateY(0); /* Slide into place */
 }
