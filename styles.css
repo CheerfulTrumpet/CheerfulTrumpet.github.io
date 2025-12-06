@@ -1,18 +1,47 @@
-/* Custom CSS for Background Animation */
+/* RESET AND CORE STYLES */
 body {
-    background: linear-gradient(-45deg, #1a1a1a, #2d2d2d, #1a1a1a);
-    background-size: 400% 400%;
-    animation: gradientShift 15s ease infinite; /* Slow, infinite animation */
-    /* ... Keep existing body styles ... */
+    margin: 0;
+    padding: 0;
+    /* A deep, professional "IDE" dark grey - no more generic blue */
+    background-color: #0b0c10; 
+    color: #c5c6c7;
+    font-family: 'Segoe UI', sans-serif;
+    overflow-x: hidden; /* Prevent side scroll */
 }
-@keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+
+/* THE CANVAS STYLING */
+#background-canvas {
+    position: fixed; /* Stays in place when you scroll */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Puts it BEHIND everything else */
+}
+
+/* UPDATE TEXT COLORS FOR CONTRAST */
+h1, h2, h3, h4 {
+    color: #66fcf1; /* A sharp "Cyber Cyan" for headings */
+}
+
+.profile-card {
+    /* Make cards semi-transparent so you can see the particles behind them */
+    background: rgba(31, 40, 51, 0.8); 
+    backdrop-filter: blur(5px); /* The "Frosted Glass" effect */
+    border: 1px solid rgba(102, 252, 241, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.text-white-50 {
+    color: #c5c6c7 !important; /* Lighter grey for readability */
+}
+
+/* Update the Typewriter Cursor to match the new Cyan */
+.cursor {
+    color: #66fcf1;
 }
 
 /* Custom "Dark Mode" aesthetic */
-body { background-color: #1a1a1a; color: #f0f0f0; font-family: 'Segoe UI', sans-serif; }
 .hero-section { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); }
 .profile-card { background: #2d2d2d; border: none; padding: 20px; transition: transform 0.3s; }
 .profile-card:hover { transform: translateY(-5px); border-bottom: 3px solid #007bff; }
