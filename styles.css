@@ -123,3 +123,18 @@ h1, h2, h3, h4, .text-accent { color: var(--accent-color) !important; transition
     background: var(--card-bg); border: 2px solid var(--accent-color); border-radius: 10px;
     padding: 20px; z-index: 10000; box-shadow: 0 0 20px rgba(0,0,0,0.1); color: var(--text-color);
 }
+
+/* --- PERSONAL PHOTOS --- */
+.photo-frame img {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Ensure images fill their container nicely */
+    width: 100%; 
+    height: auto;
+    object-fit: cover; /* Prevents stretching if images aren't perfect aspect ratio */
+    aspect-ratio: 4 / 3; /* Enforces a consistent rectangular shape */
+}
+
+.photo-frame:hover img {
+    transform: translateY(-5px) scale(1.02); /* Slight lift and zoom */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important; /* Deeper shadow on hover */
+}
