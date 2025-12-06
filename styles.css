@@ -124,52 +124,60 @@ h1, h2, h3, h4, .text-accent { color: var(--accent-color) !important; transition
     padding: 20px; z-index: 10000; box-shadow: 0 0 20px rgba(0,0,0,0.1); color: var(--text-color);
 }
 
-/* --- PERSONAL PHOTOS --- */
 /* --- PERSONAL PHOTOS & HOVER CAPTIONS --- */
 .photo-frame {
-    position: relative; /* Crucial: Makes the absolute caption sit inside this box */
-    overflow: hidden;   /* Ensures caption doesn't spill out on rounded corners */
-    border-radius: 8px; /* Rounds the corners of the whole frame */
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    /* Ensure the caption doesn't overflow the rounded corners */
 }
 
 .photo-frame img {
-    transition: transform 0.5s ease;
+    /* Add 'filter' to the transition for a smooth blur effect */
+    transition: transform 0.5s ease, filter 0.5s ease;
     width: 100%;
     height: auto;
     object-fit: cover;
     aspect-ratio: 4 / 3;
-    display: block; /* Removes tiny gap at bottom of images */
+    display: block;
 }
 
-/* The text overlay container */
+/* The text overlay container - NOW CENTERED & FULL COVER */
 .photo-caption {
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
     width: 100%;
-    /* Semi-transparent black background for readability */
-    background: rgba(0, 0, 0, 0.7); 
-    color: white; /* Text is always white for contrast */
-    padding: 15px;
+    height: 100%; /* Cover the entire image area */
+    
+    /* Darker, full-cover overlay for readability */
+    background: rgba(0, 0, 0, 0.6); 
+    color: white;
+    
+    /* Use Flexbox to perfectly center the text */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    padding: 20px;
     text-align: center;
-    font-weight: 500;
+    font-weight: 700; /* Make text bolder */
+    font-size: 1.2rem; /* Make text slightly larger */
     
     /* Hide it by default */
     opacity: 0;
-    /* Push it down slightly so it slides up */
-    transform: translateY(20px); 
-    transition: all 0.4s ease-in-out;
+    transition: opacity 0.3s ease-in-out; /* Simple smooth fade */
 }
 
 /* HOVER STATES */
 
-/* 1. Zoom image */
+/* 1. Zoom AND Blur the image */
 .photo-frame:hover img {
-    transform: scale(1.1);
+    transform: scale(1.1); /* Slight zoom keeps it dynamic */
+    filter: blur(5px);    /* The blur effect */
 }
 
-/* 2. Reveal caption */
+/* 2. Reveal the caption */
 .photo-frame:hover .photo-caption {
-    opacity: 1; /* Make visible */
-    transform: translateY(0); /* Slide into place */
+    opacity: 1; /* Fade in */
 }
