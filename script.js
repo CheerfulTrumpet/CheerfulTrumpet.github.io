@@ -1,67 +1,48 @@
+// 1. Toggle the Menu Open/Close
+window.toggleThemeMenu = function() {
+    const panel = document.getElementById('control-panel');
+    if (panel.style.display === 'none' || panel.style.display === '') {
+        panel.style.display = 'block';
+    } else {
+        panel.style.display = 'none';
+    }
+}
+
+// 2. Handle Color Changes
+window.changeTheme = function(type, color) {
+    const root = document.documentElement;
+    
+    if (type === 'accent') {
+        root.style.setProperty('--accent-color', color);
+        root.style.setProperty('--card-border', color + '20'); // Add transparency
+    } 
+    else if (type === 'secondary') {
+        root.style.setProperty('--secondary-color', color);
+        // Force particles to update immediately
+        if (typeof particlesArray !== 'undefined') {
+            particlesArray.forEach(p => p.color = color);
+        }
+    } 
+    else if (type === 'bg') {
+        root.style.setProperty('--bg-color', color);
+    }
+}
+
+
+/* ------------------------------------------------
+   PAGE LOAD LOGIC (Canvas, Typewriter, Clock)
+   ------------------------------------------------ */
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* ------------------------------------------------
-       REAL-TIME THEME ENGINE
-       ------------------------------------------------ */
-    const settingsBtn = document.getElementById('settings-btn');
-    const panel = document.getElementById('control-panel');
-    const root = document.documentElement;
-
-    // 1. TOGGLE MENU OPEN/CLOSE
-    if(settingsBtn && panel) {
-        settingsBtn.addEventListener('click', () => {
-            if (panel.style.display === 'none') {
-                panel.style.display = 'block';
-            } else {
-                panel.style.display = 'none';
-            }
-        });
-    }
-
-    // 2. ACCENT COLOR LISTENER
-    const pickerAccent = document.getElementById('picker-accent');
-    if(pickerAccent) {
-        pickerAccent.addEventListener('input', (e) => {
-            const newColor = e.target.value;
-            root.style.setProperty('--accent-color', newColor);
-            // Also update the border color variable to match
-            root.style.setProperty('--card-border', newColor + '20'); // Adding opacity hex
-        });
-    }
-
-    // 3. SECONDARY COLOR LISTENER (Particles)
-    const pickerSecondary = document.getElementById('picker-secondary');
-    if(pickerSecondary) {
-        pickerSecondary.addEventListener('input', (e) => {
-            const newColor = e.target.value;
-            root.style.setProperty('--secondary-color', newColor);
-            
-            // Update Particles Instantly
-            if(particlesArray) {
-                particlesArray.forEach(p => p.color = newColor);
-            }
-        });
-    }
-
-    // 4. BACKGROUND COLOR LISTENER
-    const pickerBg = document.getElementById('picker-bg');
-    if(pickerBg) {
-        pickerBg.addEventListener('input', (e) => {
-            root.style.setProperty('--bg-color', e.target.value);
-        });
-    }
-
-
-    /* ------------------------------------------------
-       PARTICLE NETWORK ANIMATION
-       ------------------------------------------------ */
+    /* --- PARTICLE NETWORK --- */
     const canvas = document.getElementById("background-canvas");
     if (canvas) {
         const ctx = canvas.getContext("2d");
+        // Ensure canvas matches container size
         canvas.width = canvas.parentElement.offsetWidth;
         canvas.height = canvas.parentElement.offsetHeight;
 
-        let particlesArray;
+        window.particlesArray = []; // Make global so the theme changer can find it
 
         class Particle {
             constructor() {
@@ -70,7 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.directionX = (Math.random() * 1) - 0.5;
                 this.directionY = (Math.random() * 1) - 0.5;
                 this.size = (Math.random() * 2) + 1;
-                // Get initial color
+                
+                // Get color from CSS variable
                 const cssColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim();
                 this.color = cssColor || '#45a29e'; 
             }
@@ -90,36 +72,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function init() {
-            particlesArray = [];
+            window.particlesArray = [];
             let numberOfParticles = (canvas.height * canvas.width) / 9000;
             for (let i = 0; i < numberOfParticles; i++) {
-                particlesArray.push(new Particle());
+                window.particlesArray.push(new Particle());
             }
         }
 
         function animate() {
             requestAnimationFrame(animate);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
+            for (let i = 0; i < window.particlesArray.length; i++) {
+                window.particlesArray[i].update();
             }
             connect();
         }
 
         function connect() {
-            let opacityValue = 1;
-            for (let a = 0; a < particlesArray.length; a++) {
-                for (let b = a; b < particlesArray.length; b++) {
-                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
-                                + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+            for (let a = 0; a < window.particlesArray.length; a++) {
+                for (let b = a; b < window.particlesArray.length; b++) {
+                    let distance = ((window.particlesArray[a].x - window.particlesArray[b].x) * (window.particlesArray[a].x - window.particlesArray[b].x))
+                                + ((window.particlesArray[a].y - window.particlesArray[b].y) * (window.particlesArray[a].y - window.particlesArray[b].y));
                     
                     if (distance < (canvas.width/7) * (canvas.height/7)) {
-                        opacityValue = 1 - (distance/20000);
-                        ctx.strokeStyle = particlesArray[a].color; 
+                        let opacityValue = 1 - (distance/20000);
+                        ctx.strokeStyle = window.particlesArray[a].color; 
                         ctx.lineWidth = 1;
                         ctx.beginPath();
-                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.moveTo(window.particlesArray[a].x, window.particlesArray[a].y);
+                        ctx.lineTo(window.particlesArray[b].x, window.particlesArray[b].y);
                         ctx.stroke();
                     }
                 }
@@ -136,10 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         animate();
     }
 
-    /* ------------------------------------------------
-       TYPEWRITER & CLOCK LOGIC (Keep existing logic)
-       ------------------------------------------------ */
-    // Typewriter
+    /* --- TYPEWRITER --- */
     const words = ["CS Student.", "Problem Solver.", "C Developer.", "Tech Enthusiast."];
     let i = 0;
     let timer;
@@ -172,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
         typeWriter();
     }
 
-    // Clock Logic
+    /* --- CLOCK --- */
     function updateTimeAndGreeting() {
         const now = new Date();
         const seconds = now.getSeconds();
@@ -194,6 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const displayMin = minutes < 10 ? '0' + minutes : minutes;
         const displayHour = hours % 12 || 12; 
         const ampm = hours >= 12 ? 'PM' : 'AM';
+        
         const dTime = document.getElementById('digital-time');
         if(dTime) dTime.innerText = `${displayHour}:${displayMin} ${ampm}`;
 
@@ -206,5 +185,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     updateTimeAndGreeting();
     setInterval(updateTimeAndGreeting, 1000);
-
 });
