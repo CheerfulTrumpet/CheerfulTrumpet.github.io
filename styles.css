@@ -1,77 +1,54 @@
-/* ------------------------------------------------ */
-/* 1. DEFINE VARIABLES (THEMES) */
-/* ------------------------------------------------ */
+/* 1. CSS VARIABLES (THEME ENGINE) */
 :root {
-    /* DEFAULT THEME: Electric Cyan */
     --bg-color: #0b0c10;
     --card-bg: rgba(31, 40, 51, 0.8);
-    --accent-color: #66fcf1;   /* The bright text color */
-    --secondary-color: #45a29e; /* The darker button/particle color */
+    --accent-color: #66fcf1;
+    --secondary-color: #45a29e;
     --text-color: #c5c6c7;
     --card-border: rgba(102, 252, 241, 0.1);
 }
 
-/* ------------------------------------------------ */
 /* 2. CORE STYLES */
-/* ------------------------------------------------ */
 body {
-    margin: 0;
-    padding: 0;
-    background-color: var(--bg-color); /* Uses variable */
-    color: var(--text-color);          /* Uses variable */
+    margin: 0; padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     font-family: 'Segoe UI', sans-serif;
     overflow-x: hidden;
-    transition: background-color 0.5s ease, color 0.5s ease; /* Smooth fade when switching */
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* THE CANVAS STYLING */
-#background-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-}
-
-/* ------------------------------------------------ */
-/* 3. COMPONENT STYLING (Using Variables) */
-/* ------------------------------------------------ */
-
-h1, h2, h3, h4 {
-    color: var(--accent-color) !important;
-    font-weight: 700;
-    letter-spacing: 2px;
-    transition: color 0.5s ease;
-}
-
+/* 3. HERO & CANVAS */
 .hero-section {
     position: relative;
-    margin-top: 0;
-    padding-top: 0;
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: none;
     overflow: hidden;
 }
+
+#background-canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+}
+
+/* 4. COMPONENT STYLING */
+h1, h2, h3, h4, .text-accent { color: var(--accent-color) !important; }
+.text-secondary-custom { color: var(--secondary-color) !important; }
+.text-white-50 { color: var(--text-color) !important; }
 
 .profile-card {
     background: var(--card-bg);
     backdrop-filter: blur(5px);
     border: 1px solid var(--card-border);
-    padding: 20px;
-    transition: transform 0.3s ease, border-color 0.5s ease;
+    transition: transform 0.3s ease;
 }
+.profile-card:hover { transform: translateY(-5px); border-bottom: 3px solid var(--accent-color); }
 
-.profile-card:hover {
-    transform: translateY(-5px);
-    border-bottom: 3px solid var(--accent-color);
-}
-
-/* Buttons */
 .btn-custom {
     background-color: var(--accent-color);
     color: var(--bg-color);
@@ -79,85 +56,41 @@ h1, h2, h3, h4 {
     border-radius: 50px;
     text-decoration: none;
     font-weight: bold;
-    border: 1px solid transparent;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s;
 }
+.btn-custom:hover { background-color: var(--secondary-color); color: var(--bg-color); }
 
-.btn-custom:hover {
-    background-color: var(--secondary-color);
-    color: var(--bg-color);
-}
+/* 5. TYPEWRITER CURSOR */
+.cursor { animation: blink 1s infinite; font-weight: bold; color: var(--accent-color); }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-.text-white-50 {
-    color: var(--text-color) !important;
-}
-
-/* Typewriter Cursor */
-.cursor {
-    animation: blink 1s infinite;
-    font-weight: bold;
-    color: var(--accent-color);
-}
-
-@keyframes blink {
-    0% { opacity: 1; }
-    50% { opacity: 0; }
-    100% { opacity: 1; }
-}
-
-/* ------------------------------------------------ */
-/* 4. ANALOG CLOCK (Using Variables) */
-/* ------------------------------------------------ */
-#analog-clock-container {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    text-align: center;
-    z-index: 1000;
-}
-
+/* 6. CLOCK */
+#analog-clock-container { position: absolute; top: 20px; right: 20px; z-index: 1000; }
 .clock {
-    width: 100px;
-    height: 100px;
+    width: 100px; height: 100px;
     border: 3px solid var(--accent-color);
     border-radius: 50%;
     position: relative;
     background: rgba(0, 0, 0, 0.6);
     margin: 0 auto 5px auto;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    transition: border-color 0.5s ease;
 }
+.hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom; background: white; transform: translateX(-50%); border-radius: 4px; }
+.hour { width: 4px; height: 25px; }
+.minute { width: 3px; height: 35px; background: #ccc; }
+.second { width: 2px; height: 40px; background: #ff4d4d; }
+.center-dot { width: 8px; height: 8px; background: var(--accent-color); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+#digital-caption { font-size: 0.8rem; background: rgba(0,0,0,0.5); padding: 2px 8px; border-radius: 10px; }
 
-.hand {
-    position: absolute;
-    bottom: 50%;
-    left: 50%;
-    transform-origin: bottom;
-    background-color: white;
-    border-radius: 4px;
-    transform: translateX(-50%);
+/* 7. SETTINGS BUTTON & PANEL */
+.settings-btn {
+    position: fixed; bottom: 20px; right: 20px;
+    z-index: 10000; /* Extremely high Z-Index */
+    border-radius: 50%; width: 50px; height: 50px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5); border: 1px solid white;
+    display: flex; align-items: center; justify-content: center;
 }
-
-.hour { width: 4px; height: 25px; background-color: white; }
-.minute { width: 3px; height: 35px; background-color: #ccc; }
-.second { width: 2px; height: 40px; background-color: #ff4d4d; }
-
-.center-dot {
-    width: 8px;
-    height: 8px;
-    background-color: var(--accent-color);
-    border-radius: 50%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transition: background-color 0.5s ease;
-}
-
-#digital-caption {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.8);
-    background: rgba(0,0,0,0.5);
-    padding: 2px 8px;
-    border-radius: 10px;
+.theme-panel {
+    display: none; position: fixed; bottom: 80px; right: 20px; width: 250px;
+    background: rgba(0,0,0,0.95); border: 1px solid #444; border-radius: 10px;
+    padding: 20px; z-index: 10000; box-shadow: 0 0 20px rgba(0,0,0,0.8); color: white;
 }
