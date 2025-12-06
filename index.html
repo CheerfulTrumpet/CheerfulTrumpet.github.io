@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
     <link rel="stylesheet" href="styles.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 </head>
 <body>
     <div id="analog-clock-container">
@@ -20,7 +21,7 @@
         <div id="digital-caption">It is currently: <span id="digital-time">Loading...</span></div>
     </div>
 
-    <div class="hero-section">
+    <div class="hero-section" data-aos="fade-down" data-aos-duration="1000">
         <div class="container">
             <h1 class="display-3">HELLO, I'M [YOUR NAME]</h1>
             <p class="lead mb-4">I am a <span id="typewriter" class="text-primary fw-bold"></span><span class="cursor">|</span></p>
@@ -31,7 +32,7 @@
         </div>
     </div>
 
-    <div id="about" class="container py-5">
+    <div id="about" class="container py-5" data-aos="fade-up">
         <div class="row justify-content-center">
             <div class="col-md-8 text-center">
                 <h2 class="mb-4">About Me</h2>
@@ -44,16 +45,30 @@
         </div>
     </div>
 
-    <div class="container py-5">
-        <h2 class="text-center mb-4">Technical Skills</h2>
-        <div class="row text-center">
-            <div class="col-md-4 mb-3"><div class="profile-card"><i class="devicon-java-plain colored" style="font-size: 3rem;"></i><i class="devicon-python-plain colored" style="font-size: 3rem;"></i></div></div>
-            <div class="col-md-4 mb-3"><div class="profile-card"><h4>Data Structures</h4></div></div>
-            <div class="col-md-4 mb-3"><div class="profile-card"><i class="devicon-git-plain colored" style="font-size: 3rem;"></i></div></div>
+    <div id="skills-section" class="container py-5">
+        <h2 class="text-center mb-5">Core Technical Skills</h2>
+        <div class="row text-center justify-content-center">
+    
+            <div class="col-4 col-md-2 mb-4">
+                <i class="devicon-java-plain colored" data-aos="zoom-in" data-aos-duration="600" style="font-size: 4rem;"></i>
+                <p class="mt-2 text-white-50">Java</p>
+            </div>
+            <div class="col-4 col-md-2 mb-4">
+                <i class="devicon-python-plain colored" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="100" style="font-size: 4rem;"></i>
+                <p class="mt-2 text-white-50">Python</p>
+            </div>
+            <div class="col-4 col-md-2 mb-4">
+                <i class="devicon-git-plain colored" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="200" style="font-size: 4rem;"></i>
+                <p class="mt-2 text-white-50">Git</p>
+            </div>
+            <div class="col-4 col-md-2 mb-4">
+                <i class="devicon-html5-plain colored" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="300" style="font-size: 4rem;"></i>
+                <p class="mt-2 text-white-50">HTML/CSS</p>
+            </div>
         </div>
     </div>
 
-    <div class="container py-5 text-center">
+    <div class="container py-5 text-center" data-aos="fade-up">
         <h2>Get In Touch</h2>
         <p>Ready to collaborate on new projects.</p>
         <div class="mt-4">
@@ -66,6 +81,15 @@
     <footer class="text-center py-4 text-muted">
         <small>&copy; 2025 Built by [Your Name]</small>
     </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ 
+            // Optional: Settings for a smoother fade
+            duration: 800, // Duration of the animation
+            once: true // Animation only happens once
+        }); 
+    </script>
 
     <script src="script.js"></script>
 
