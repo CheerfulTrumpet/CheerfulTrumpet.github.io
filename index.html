@@ -4,57 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Portfolio</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
-    <link rel="stylesheet" href="styles.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <button onclick="toggleThemeMenu()" class="btn btn-dark" style="position: fixed; bottom: 20px; right: 20px; z-index: 999999; border-radius: 50%; width: 50px; height: 50px; box-shadow: 0 0 15px rgba(0,0,0,0.5); border: 1px solid white; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+
+    <button onclick="toggleThemeMenu()" class="btn btn-dark settings-btn">
         <i class="fas fa-cog fa-lg"></i>
     </button>
 
-    <div id="control-panel" style="display: none; position: fixed; bottom: 80px; right: 20px; width: 250px; background: rgba(0,0,0,0.9); border: 1px solid #444; border-radius: 10px; padding: 20px; z-index: 999999; box-shadow: 0 0 20px rgba(0,0,0,0.8); color: white;">
+    <div id="control-panel" class="theme-panel">
         <h5 style="border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 15px;">Theme Engine</h5>
         
         <div class="mb-3">
-            <label class="form-label" style="font-size: 0.9rem;">Accent Color</label>
-            <input type="color" oninput="changeTheme('accent', this.value)" class="form-control form-control-color" value="#66fcf1" style="width: 100%;">
+            <label class="form-label small">Accent Color</label>
+            <input type="color" oninput="changeTheme('accent', this.value)" class="form-control form-control-color w-100" value="#66fcf1">
         </div>
 
         <div class="mb-3">
-            <label class="form-label" style="font-size: 0.9rem;">Secondary Color</label>
-            <input type="color" oninput="changeTheme('secondary', this.value)" class="form-control form-control-color" value="#45a29e" style="width: 100%;">
+            <label class="form-label small">Secondary Color</label>
+            <input type="color" oninput="changeTheme('secondary', this.value)" class="form-control form-control-color w-100" value="#45a29e">
         </div>
 
         <div class="mb-3">
-            <label class="form-label" style="font-size: 0.9rem;">Background Color</label>
-            <input type="color" oninput="changeTheme('bg', this.value)" class="form-control form-control-color" value="#0b0c10" style="width: 100%;">
+            <label class="form-label small">Background Color</label>
+            <input type="color" oninput="changeTheme('bg', this.value)" class="form-control form-control-color w-100" value="#0b0c10">
         </div>
-    </div>
-    
-        <p style="font-size: 0.7rem; color: #888; margin-top: 10px;">*Updates in Real-Time</p>
-    </div>
-    <div id="analog-clock-container">
-        <div class="clock">
-            <div class="hand hour" id="hour-hand"></div>
-            <div class="hand minute" id="minute-hand"></div>
-            <div class="hand second" id="second-hand"></div>
-            <div class="center-dot"></div>
-        </div>
-        <div id="digital-caption">It is currently: <span id="digital-time">Loading...</span></div>
     </div>
 
-    <div class="hero-section" data-aos="fade-down" data-aos-duration="1000">
+    <div class="hero-section">
         <canvas id="background-canvas"></canvas>
-        <div class="container">
-            <h1 class="display-3">HELLO, I'M [YOUR NAME]</h1>
-            <p class="lead mb-4">I am a <span id="typewriter" class="text-primary fw-bold"></span><span class="cursor">|</span></p>
+
+        <div id="analog-clock-container">
+            <div class="clock">
+                <div class="hand hour" id="hour-hand"></div>
+                <div class="hand minute" id="minute-hand"></div>
+                <div class="hand second" id="second-hand"></div>
+                <div class="center-dot"></div>
+            </div>
+            <div id="digital-caption">It is currently: <span id="digital-time">Loading...</span></div>
+        </div>
+
+        <div class="container" data-aos="fade-down" data-aos-duration="1000">
+            <div class="mb-3">
+                <span id="greeting" class="h4 text-secondary-custom" style="font-weight: 300; letter-spacing: 2px;">Welcome</span>
+            </div>
+            
+            <h1 class="display-3 fw-bold">I'M [YOUR NAME]</h1>
+            
+            <p class="lead mb-4">I am a <span id="typewriter" class="text-accent fw-bold"></span><span class="cursor">|</span></p>
+            
             <a href="#about" class="btn-custom"><i class="fas fa-arrow-down"></i> See My Work</a>
-            <a href="resume.pdf" target="_blank" class="btn btn-outline-light rounded-pill px-4 mx-2">
-                <i class="fas fa-file-download"></i> My Resume
-            </a>
+            <a href="resume.pdf" target="_blank" class="btn btn-outline-light rounded-pill px-4 mx-2"><i class="fas fa-file-download"></i> My Resume</a>
         </div>
     </div>
 
@@ -62,14 +68,11 @@
         <div class="row justify-content-center">
             <div class="col-md-9 text-center">
                 <h2 class="mb-4">About Me</h2>
-                <p class="lead text-secondary mb-4">
+                <p class="lead text-secondary-custom mb-4">
                     I am a Computer Science student at <strong>Rutgers University</strong>, bridging the gap between low-level system architecture and high-level cognitive theory.
                 </p>
                 <p class="text-white-50" style="font-size: 1.1rem; line-height: 1.8;">
-                    While my technical foundation is built on <strong>Data Structures, Calculus, and Computer Architecture</strong>, I am equally driven by the questions raised in my <em>Minds, Machines, & Persons</em> coursework. I am passionate about understanding not just <em>how</em> to write efficient code, but <em>how</em> computational systems model human intelligence and impact society.
-                </p>
-                <p class="text-white-50 mt-3">
-                    Currently seeking <strong>Software Engineering Internships</strong> where I can apply my mathematical background and problem-solving logic to build robust, meaningful software.
+                    While my technical foundation is built on <strong>Data Structures, Calculus, and Computer Architecture</strong>, I am equally driven by the questions raised in my <em>Minds, Machines, & Persons</em> coursework.
                 </p>
             </div>
         </div>
@@ -77,39 +80,26 @@
 
     <div id="coursework-spotlight" class="container py-5" data-aos="fade-up">
         <h2 class="text-center mb-5">Rutgers University Coursework 🛡️</h2>
-        <p class="lead text-center mb-5 text-secondary">
-            My academic focus is on the mathematical foundations of computing and low-level system architecture.
-        </p>
-    
         <div class="row text-center">
-            
-            <div class="col-md-4 mb-4" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="100">
+            <div class="col-md-4 mb-4" data-aos="zoom-in" data-aos-delay="100">
                 <div class="profile-card p-4 h-100">
-                    <i class="fas fa-sitemap fa-3x mb-3 text-primary"></i>
+                    <i class="fas fa-sitemap fa-3x mb-3 text-accent"></i>
                     <h4 class="text-white">Data Structures</h4>
-                    <p class="text-white-50">
-                        Mastered the implementation and analysis of complex structures including <strong>Hash Tables, Binary Search Trees, and Heaps</strong>. Proficient in analyzing runtime efficiency using <strong>Big-O notation</strong>.
-                    </p>
+                    <p class="text-white-50">Mastered Hash Tables, BSTs, Heaps, and Big-O analysis.</p>
                 </div>
             </div>
-    
-            <div class="col-md-4 mb-4" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="200">
+            <div class="col-md-4 mb-4" data-aos="zoom-in" data-aos-delay="200">
                 <div class="profile-card p-4 h-100">
-                    <i class="fas fa-microchip fa-3x mb-3 text-warning"></i>
+                    <i class="fas fa-microchip fa-3x mb-3 text-accent"></i>
                     <h4 class="text-white">Computer Architecture</h4>
-                    <p class="text-white-50">
-                        Gained deep insight into the hardware-software interface. Studied <strong>Assembly Language, Memory Management, and CPU Datapath</strong> logic to understand how high-level code executes on physical hardware.
-                    </p>
+                    <p class="text-white-50">Assembly Language, Memory Management, and CPU Datapath logic.</p>
                 </div>
             </div>
-    
-            <div class="col-md-4 mb-4" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="300">
+            <div class="col-md-4 mb-4" data-aos="zoom-in" data-aos-delay="300">
                 <div class="profile-card p-4 h-100">
-                    <i class="fas fa-vector-square fa-3x mb-3 text-success"></i>
-                    <h4 class="text-white">Linear Algebra & Discrete</h4>
-                    <p class="text-white-50">
-                        Built a rigorous mathematical foundation in <strong>Vector Spaces, Matrix Operations, and Graph Theory</strong>. Focused on the logic and probability required for advanced algorithm design.
-                    </p>
+                    <i class="fas fa-vector-square fa-3x mb-3 text-accent"></i>
+                    <h4 class="text-white">Linear Algebra</h4>
+                    <p class="text-white-50">Vector Spaces, Matrices, and Graph Theory foundations.</p>
                 </div>
             </div>
         </div>
@@ -119,52 +109,30 @@
         <h2 class="text-center mb-5">Core Technical Skills</h2>
         <div class="row text-center justify-content-center">
             <div class="col-4 col-md-2 mb-4">
-                <i class="devicon-c-plain colored" data-aos="zoom-in" data-aos-duration="600" style="font-size: 4rem;"></i>
+                <i class="devicon-c-plain colored" data-aos="zoom-in" style="font-size: 4rem;"></i>
                 <p class="mt-2 text-white-50">C</p>
             </div>
             <div class="col-4 col-md-2 mb-4">
-                <i class="devicon-java-plain colored" data-aos="zoom-in" data-aos-duration="600" style="font-size: 4rem;"></i>
+                <i class="devicon-java-plain colored" data-aos="zoom-in" data-aos-delay="100" style="font-size: 4rem;"></i>
                 <p class="mt-2 text-white-50">Java</p>
             </div>
             <div class="col-4 col-md-2 mb-4">
-                <i class="devicon-python-plain colored" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="100" style="font-size: 4rem;"></i>
+                <i class="devicon-python-plain colored" data-aos="zoom-in" data-aos-delay="200" style="font-size: 4rem;"></i>
                 <p class="mt-2 text-white-50">Python</p>
             </div>
             <div class="col-4 col-md-2 mb-4">
-                <i class="devicon-git-plain colored" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="200" style="font-size: 4rem;"></i>
+                <i class="devicon-git-plain colored" data-aos="zoom-in" data-aos-delay="300" style="font-size: 4rem;"></i>
                 <p class="mt-2 text-white-50">Git</p>
             </div>
-            <div class="col-4 col-md-2 mb-4">
-                <i class="devicon-html5-plain colored" data-aos="zoom-in" data-aos-duration="600" data-aos-delay="300" style="font-size: 4rem;"></i>
-                <p class="mt-2 text-white-50">HTML/CSS</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="container py-5 text-center" data-aos="fade-up">
-        <h2>Get In Touch</h2>
-        <p>Ready to collaborate on new projects.</p>
-        <div class="mt-4">
-            <a href="#" class="btn btn-outline-light mx-2"><i class="fab fa-linkedin"></i> LinkedIn</a>
-            <a href="#" class="btn btn-outline-light mx-2"><i class="fab fa-github"></i> GitHub</a>
-            <a href="mailto:your.email@example.com" class="btn btn-outline-light mx-2"><i class="fas fa-envelope"></i> Email</a>
         </div>
     </div>
 
     <footer class="text-center py-4 text-muted">
-        <small>&copy; 2025 Built by [Your Name]</small>
+        <p id="philosophy-quote" style="font-style: italic; font-family: serif;">"Loading thought..."</p>
+        <small>&copy; 2025 [Your Name]</small>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({ 
-            // Optional: Settings for a smoother fade
-            duration: 800, // Duration of the animation
-            once: true // Animation only happens once
-        }); 
-    </script>
-
     <script src="script.js"></script>
-
 </body>
 </html>
