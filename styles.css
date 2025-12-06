@@ -2,8 +2,8 @@
 body {
     margin: 0;
     padding: 0;
-    /* A deep, professional "IDE" dark grey - no more generic blue */
-    background-color: #0b0c10; 
+    /* A deep, professional "IDE" dark grey - the base background */
+    background-color: #0b0c10;
     color: #c5c6c7;
     font-family: 'Segoe UI', sans-serif;
     overflow-x: hidden; /* Prevent side scroll */
@@ -19,98 +19,131 @@ body {
     z-index: -1; /* Puts it BEHIND everything else */
 }
 
-/* UPDATE TEXT COLORS FOR CONTRAST */
+/* ------------------------------------------------ */
+/* CORE SITE STYLING (The New "Electric Future" Theme) */
+/* ------------------------------------------------ */
+
+/* Headings use the Cyber Cyan color */
 h1, h2, h3, h4 {
-    color: #66fcf1; /* A sharp "Cyber Cyan" for headings */
+    color: #66fcf1;
+    font-weight: 700; /* Re-applied from old h1 rule */
+    letter-spacing: 2px; /* Re-applied from old h1 rule */
 }
 
+/* Hero Section Background (We removed the background gradient to let the particles show) */
+.hero-section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    /* Removed old background: linear-gradient() to allow canvas to be visible */
+    background: none;
+}
+
+/* Profile Cards (Frosted Glass Effect for visibility over particles) */
 .profile-card {
     /* Make cards semi-transparent so you can see the particles behind them */
-    background: rgba(31, 40, 51, 0.8); 
+    background: rgba(31, 40, 51, 0.8);
     backdrop-filter: blur(5px); /* The "Frosted Glass" effect */
     border: 1px solid rgba(102, 252, 241, 0.1);
+    padding: 20px; /* Re-applied padding */
     transition: transform 0.3s ease;
 }
 
+.profile-card:hover {
+    transform: translateY(-5px);
+    border-bottom: 3px solid #66fcf1; /* New Cyan highlight */
+}
+
+/* Buttons (Updated to look cleaner and match the new theme) */
+.btn-custom {
+    background-color: #66fcf1; /* New Cyan background */
+    color: #0b0c10; /* Dark text for contrast */
+    padding: 10px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    border: 1px solid transparent;
+}
+
+.btn-custom:hover {
+    background-color: #45a29e; /* Slightly darker cyan on hover */
+    color: #0b0c10;
+}
+
+/* Text Colors */
 .text-white-50 {
     color: #c5c6c7 !important; /* Lighter grey for readability */
 }
 
-/* Update the Typewriter Cursor to match the new Cyan */
-.cursor {
-    color: #66fcf1;
-}
-
-/* Custom "Dark Mode" aesthetic */
-.hero-section { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); }
-.profile-card { background: #2d2d2d; border: none; padding: 20px; transition: transform 0.3s; }
-.profile-card:hover { transform: translateY(-5px); border-bottom: 3px solid #007bff; }
-h1 { font-weight: 700; letter-spacing: 2px; }
-.btn-custom { background-color: #007bff; color: white; padding: 10px 30px; border-radius: 50px; text-decoration: none; }
-.btn-custom:hover { background-color: #0056b3; color: white; }
-/* Typewriter Cursor Animation */
+/* Typewriter Cursor Animation (Using the new Cyan) */
 .cursor {
     animation: blink 1s infinite;
     font-weight: bold;
-    color: #007bff;
+    color: #66fcf1; /* New Cyber Cyan color */
 }
+
 @keyframes blink {
     0% { opacity: 1; }
     50% { opacity: 0; }
     100% { opacity: 1; }
 }
-/* ANALOG CLOCK STYLES */
+
+/* ------------------------------------------------ */
+/* ANALOG CLOCK STYLES (Updated to match the Cyan theme) */
+/* ------------------------------------------------ */
 #analog-clock-container {
     position: absolute;
     top: 20px;
     right: 20px;
     text-align: center;
-    z-index: 1000; /* Ensure it sits on top of the hero image */
+    z-index: 1000;
 }
 
 .clock {
     width: 100px;
     height: 100px;
-    border: 3px solid #007bff; /* Blue rim */
+    border: 3px solid #66fcf1; /* Cyan rim */
     border-radius: 50%;
     position: relative;
-    background: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
-    margin: 0 auto 5px auto; /* Center it and add space below */
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.6);
+    margin: 0 auto 5px auto;
+    box-shadow: 0 0 10px rgba(102, 252, 241, 0.2);
 }
 
 .hand {
     position: absolute;
-    bottom: 50%; /* Start from the center */
+    bottom: 50%;
     left: 50%;
-    transform-origin: bottom; /* Pivot from the bottom of the hand (center of clock) */
+    transform-origin: bottom;
     background-color: white;
     border-radius: 4px;
-    transform: translateX(-50%); /* Correct centering alignment */
+    transform: translateX(-50%);
 }
 
 .hour {
     width: 4px;
-    height: 25px; /* Short hand */
+    height: 25px;
     background-color: white;
 }
 
 .minute {
     width: 3px;
-    height: 35px; /* Long hand */
+    height: 35px;
     background-color: #ccc;
 }
 
 .second {
     width: 2px;
-    height: 40px; /* Longest hand */
-    background-color: red;
+    height: 40px;
+    background-color: #ff4d4d; /* Keeping red for the second hand for visibility */
 }
 
 .center-dot {
     width: 8px;
     height: 8px;
-    background-color: #007bff;
+    background-color: #66fcf1; /* Cyan dot */
     border-radius: 50%;
     position: absolute;
     top: 50%;
