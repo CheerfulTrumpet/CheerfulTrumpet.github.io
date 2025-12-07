@@ -3,11 +3,23 @@
    ========================================================================== */
 window.toggleThemeMenu = function() {
     const panel = document.getElementById('control-panel');
+    const btn = document.querySelector('.settings-btn');
+    const icon = btn.querySelector('i');
+
+    // 1. Toggle Panel Visibility
     if (panel.style.display === 'none' || panel.style.display === '') {
         panel.style.display = 'block';
     } else {
         panel.style.display = 'none';
     }
+
+    // 2. Trigger Gear Spin Animation
+    // Remove class if it exists to reset animation, then add it back
+    icon.classList.remove('spinning');
+    
+    // Slight delay to allow browser to register the removal
+    void icon.offsetWidth; // Force reflow (magic trick to restart CSS animation)
+    icon.classList.add('spinning');
 };
 
 window.changeTheme = function(type, color) {
@@ -37,14 +49,19 @@ document.addEventListener('DOMContentLoaded', () => {
         AOS.init({ duration: 1000, once: true, mirror: false });
     }
 
-    /* --- PRIORITY 1.5: THEME NOTIFICATION TOAST --- */
+    /* --- PRIORITY 1.5: THEME NOTIFICATION TOAST (FIXED) --- */
     const toastElement = document.getElementById('themeToast');
+    
     if (toastElement) {
-        // Wait 2 seconds, then show the popup
+        // We set a short timeout to ensure Bootstrap is fully loaded
         setTimeout(() => {
-            const toast = new bootstrap.Toast(toastElement);
-            toast.show();
-        }, 2000);
+            if (typeof bootstrap !== 'undefined') {
+                const toast = new bootstrap.Toast(toastElement);
+                toast.show();
+            } else {
+                console.error("Bootstrap JS not found! Toast cannot show.");
+            }
+        }, 500); // 0.5 second delay (Almost immediate)
     }
 
     /* --- PRIORITY 2: CLOCK --- */
@@ -251,7 +268,6 @@ document.addEventListener('DOMContentLoaded', () => {
             targetFrame = Math.min(frameCount - 1, Math.ceil(scrollFraction * frameCount));
         });
 
-        // SMOOTH INTERPOLATION LOOP
         const smoothAnimationLoop = () => {
             const diff = targetFrame - currentFrame;
             
