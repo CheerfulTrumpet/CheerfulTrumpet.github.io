@@ -1,4 +1,4 @@
-/* 1. CSS VARIABLES (DEFAULTS: White/Black/Silver) */
+/* 1. CSS VARIABLES (DEFAULTS: White/Black/Grey) */
 :root {
     --bg-color: #ffffff;             
     --card-bg: rgba(245, 245, 245, 0.9); 
@@ -37,8 +37,9 @@ body {
 }
 
 /* SCROLL SEQUENCE ANIMATION */
+/* Reduced height to make About section appear sooner */
 #scroll-sequence-container {
-    height: 200vh; 
+    height: 150vh; 
     background-color: var(--bg-color);
     position: relative;
 }
