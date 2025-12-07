@@ -30,9 +30,6 @@ window.changeTheme = function(type, color) {
 /* ==========================================================================
    2. MAIN PAGE LOGIC 
    ========================================================================== */
-/* ==========================================================================
-   2. MAIN PAGE LOGIC 
-   ========================================================================== */
 document.addEventListener('DOMContentLoaded', () => {
 
     /* --- PRIORITY 1: ANIMATION INIT (AOS) --- */
@@ -40,26 +37,15 @@ document.addEventListener('DOMContentLoaded', () => {
         AOS.init({ duration: 1000, once: true, mirror: false });
     }
 
-    /* --- NEW: THEME NOTIFICATION TOAST --- */
+    /* --- PRIORITY 1.5: THEME NOTIFICATION TOAST --- */
     const toastElement = document.getElementById('themeToast');
     if (toastElement) {
-        // We use the Bootstrap 5 Toast API
-        // 'delay' is simpler here: we just use setTimeout for the initial pop
-        const toast = new bootstrap.Toast(toastElement);
-        
-        // check if user has already seen it (Optional: Remove this 'if' to show every time)
-        if (!localStorage.getItem('themeNotificationSeen')) {
-            setTimeout(() => {
-                toast.show();
-                // Remember that we showed it so we don't annoy them next time
-                localStorage.setItem('themeNotificationSeen', 'true'); 
-            }, 3000); // Wait 3 seconds before showing
-        }
+        // Wait 2 seconds, then show the popup
+        setTimeout(() => {
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        }, 2000);
     }
-
-    // ... rest of your code (Clock, Typewriter, etc.) ...
-
-    // ... rest of your code ...
 
     /* --- PRIORITY 2: CLOCK --- */
     function updateTimeAndGreeting() {
@@ -208,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
         animateParticles();
     }
 
-    /* --- PRIORITY 5: SCROLL SEQUENCE (MOUSE FIX APPLIED) --- */
+    /* --- PRIORITY 5: SCROLL SEQUENCE (SMOOTH MOUSE FIX) --- */
     const scrollContainer = document.getElementById('scroll-sequence-container');
     const scrollCanvas = document.getElementById('scroll-canvas');
     
@@ -220,13 +206,12 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentFrame = 0; 
         let targetFrame = 0;  
 
-        // RENDER FUNCTION
         const render = (frameIndex) => {
             const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim();
             context.fillStyle = bgColor;
             context.fillRect(0, 0, scrollCanvas.width, scrollCanvas.height);
 
-            const index = Math.round(frameIndex); // Round to nearest integer
+            const index = Math.round(frameIndex);
 
             if (images[index] && images[index].complete) {
                 const img = images[index];
@@ -239,7 +224,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } 
         };
 
-        // RESIZE
         const resizeScrollCanvas = () => {
             scrollCanvas.width = window.innerWidth;
             scrollCanvas.height = window.innerHeight;
@@ -248,7 +232,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', resizeScrollCanvas);
         resizeScrollCanvas();
 
-        // LOAD IMAGES
         for (let i = 1; i <= frameCount; i++) {
             const img = new Image();
             img.src = `images/sequence/${i}-removebg-preview.png`; 
@@ -256,7 +239,6 @@ document.addEventListener('DOMContentLoaded', () => {
             images.push(img);
         }
 
-        // SCROLL LISTENER (SETS TARGET)
         window.addEventListener('scroll', () => {
             const rect = scrollContainer.getBoundingClientRect();
             const scrollTop = -rect.top;
@@ -269,17 +251,14 @@ document.addEventListener('DOMContentLoaded', () => {
             targetFrame = Math.min(frameCount - 1, Math.ceil(scrollFraction * frameCount));
         });
 
-        // ANIMATION LOOP (INTERPOLATION WITH SPEED LIMIT)
+        // SMOOTH INTERPOLATION LOOP
         const smoothAnimationLoop = () => {
             const diff = targetFrame - currentFrame;
             
-            // Only update if visually noticeable
             if (Math.abs(diff) > 0.05) {
-                // 1. Calculate the jump size (Lerp with 0.05 factor for heaviness)
                 let step = diff * 0.05;
 
-                // 2. SPEED LIMIT: Clamp the step so it never jumps more than 0.8 frames at once
-                // This ensures we see the in-between frames even on fast mouse scrolls
+                // Clamp step size to prevent skipping frames on large mouse jumps
                 if (step > 0.8) step = 0.8;
                 if (step < -0.8) step = -0.8;
 
@@ -303,4 +282,4 @@ document.addEventListener('DOMContentLoaded', () => {
         quoteElement.innerText = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
     }
 
-}); // END DOMCONTENTLOADED
+});
