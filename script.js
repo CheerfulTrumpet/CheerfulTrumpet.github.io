@@ -32,18 +32,9 @@ window.changeTheme = function(type, color) {
    ------------------------------------------------ */
 document.addEventListener('DOMContentLoaded', () => {
 
-    
-    // --- PASTE THIS RIGHT AT THE TOP OF THE LISTENER ---
-    AOS.init({
-        duration: 1000,
-        once: true,
-    });
-    // ---------------------------------------------------
-
-    // ... rest of your code ...
-});
-    
-    // *** FIX: Initialize AOS so elements become visible ***
+    /* =========================================
+       PRIORITY 0: ANIMATION INIT (CRITICAL)
+       ========================================= */
     if (typeof AOS !== 'undefined') {
         AOS.init({
             duration: 1000,
@@ -312,4 +303,4 @@ document.addEventListener('DOMContentLoaded', () => {
         quoteElement.innerText = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
     }
 
-});
+}); // <--- THIS IS THE CORRECT CLOSING BRACKET FOR DOMContentLoaded
