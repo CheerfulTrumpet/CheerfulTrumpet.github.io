@@ -1,13 +1,10 @@
-/* 1. CSS VARIABLES */
+/* 1. CSS VARIABLES (DEFAULTS: White/Black/Grey) */
 :root {
-    --bg-color: #ffffff;            /* White Background */
+    --bg-color: #ffffff;             /* White Background */
     --card-bg: rgba(245, 245, 245, 0.9); 
-    --accent-color: #000000;        /* Black Text/Buttons */
-    
-    /* NEW DEFAULT: Silver/Grey (191, 191, 191) */
-    --secondary-color: #bfbfbf;     
-    
-    --text-color: #333333;          
+    --accent-color: #000000;         /* Black Text/Buttons */
+    --secondary-color: #bfbfbf;      /* Silver/Grey Particles */
+    --text-color: #333333;           /* Dark Grey Body Text */
     --card-border: rgba(0, 0, 0, 0.1);
 }
 
@@ -29,7 +26,7 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    overflow: hidden;
+    overflow: hidden; /* Constrains particles to this box */
 }
 
 #background-canvas {
@@ -37,6 +34,30 @@ body {
     top: 0; left: 0;
     width: 100%; height: 100%;
     z-index: -1;
+}
+
+/* SCROLL SEQUENCE ANIMATION */
+#scroll-sequence-container {
+    height: 200vh; 
+    background-color: var(--bg-color);
+    position: relative;
+}
+
+.sticky-wrapper {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+#scroll-canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 /* 4. COMPONENT STYLING */
@@ -49,14 +70,14 @@ h1, h2, h3, h4, .text-accent { color: var(--accent-color) !important; transition
     backdrop-filter: blur(5px);
     border: 1px solid var(--card-border);
     transition: transform 0.3s ease, border-color 0.3s, background 0.3s;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05); /* Subtle shadow for white mode */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 .profile-card:hover { transform: translateY(-5px); border-bottom: 3px solid var(--accent-color); }
 
-/* --- FILLED BUTTONS (See My Work) --- */
+/* --- FILLED BUTTONS --- */
 .btn-custom {
     background-color: var(--accent-color);
-    color: var(--bg-color); /* Text color is opposite of accent */
+    color: var(--bg-color); 
     padding: 10px 30px;
     border-radius: 50px;
     text-decoration: none;
@@ -69,13 +90,12 @@ h1, h2, h3, h4, .text-accent { color: var(--accent-color) !important; transition
     color: var(--accent-color); 
 }
 
-/* --- OUTLINE BUTTONS (Resume, LinkedIn, etc.) --- */
-/* This replaces btn-outline-light so it reacts to the theme */
+/* --- OUTLINE BUTTONS (Resume, Contact) --- */
 .btn-outline-custom {
     background-color: transparent;
     color: var(--accent-color);
     border: 2px solid var(--accent-color);
-    padding: 10px 30px; /* Match size of other buttons */
+    padding: 10px 30px; 
     border-radius: 50px;
     text-decoration: none;
     font-weight: bold;
@@ -97,7 +117,7 @@ h1, h2, h3, h4, .text-accent { color: var(--accent-color) !important; transition
     border: 3px solid var(--accent-color);
     border-radius: 50%;
     position: relative;
-    background: var(--card-bg); /* Match card bg instead of black */
+    background: var(--card-bg); 
     margin: 0 auto 5px auto;
     transition: border-color 0.3s;
 }
@@ -117,6 +137,7 @@ h1, h2, h3, h4, .text-accent { color: var(--accent-color) !important; transition
     display: flex; align-items: center; justify-content: center;
     background-color: var(--bg-color);
     color: var(--accent-color);
+    cursor: pointer;
 }
 .theme-panel {
     display: none; position: fixed; bottom: 80px; right: 20px; width: 250px;
@@ -124,60 +145,29 @@ h1, h2, h3, h4, .text-accent { color: var(--accent-color) !important; transition
     padding: 20px; z-index: 10000; box-shadow: 0 0 20px rgba(0,0,0,0.1); color: var(--text-color);
 }
 
-/* --- PERSONAL PHOTOS & HOVER CAPTIONS --- */
+/* 8. PHOTO GRID HOVER EFFECT */
 .photo-frame {
     position: relative;
     overflow: hidden;
     border-radius: 8px;
-    /* Ensure the caption doesn't overflow the rounded corners */
+    cursor: pointer;
 }
-
 .photo-frame img {
-    /* Add 'filter' to the transition for a smooth blur effect */
     transition: transform 0.5s ease, filter 0.5s ease;
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    aspect-ratio: 4 / 3;
-    display: block;
+    width: 100%; height: auto; object-fit: cover; aspect-ratio: 4 / 3; display: block;
 }
-
-/* The text overlay container - NOW CENTERED & FULL COVER */
 .photo-caption {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%; /* Cover the entire image area */
-    
-    /* Darker, full-cover overlay for readability */
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.6); 
     color: white;
-    
-    /* Use Flexbox to perfectly center the text */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    padding: 20px;
-    text-align: center;
-    font-weight: 700; /* Make text bolder */
-    font-size: 1.2rem; /* Make text slightly larger */
-    
-    /* Hide it by default */
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out; /* Simple smooth fade */
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; text-align: center; font-weight: 700; font-size: 1.2rem;
+    opacity: 0; transition: opacity 0.3s ease-in-out;
 }
-
-/* HOVER STATES */
-
-/* 1. Zoom AND Blur the image */
 .photo-frame:hover img {
-    transform: scale(1.1); /* Slight zoom keeps it dynamic */
-    filter: blur(5px);    /* The blur effect */
+    transform: scale(1.1); 
+    filter: blur(4px);
 }
-
-/* 2. Reveal the caption */
 .photo-frame:hover .photo-caption {
-    opacity: 1; /* Fade in */
+    opacity: 1;
 }
