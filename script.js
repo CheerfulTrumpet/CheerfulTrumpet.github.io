@@ -31,6 +31,17 @@ window.changeTheme = function(type, color) {
    2. PAGE LOAD LOGIC
    ------------------------------------------------ */
 document.addEventListener('DOMContentLoaded', () => {
+
+    
+    // --- PASTE THIS RIGHT AT THE TOP OF THE LISTENER ---
+    AOS.init({
+        duration: 1000,
+        once: true,
+    });
+    // ---------------------------------------------------
+
+    // ... rest of your code ...
+});
     
     // *** FIX: Initialize AOS so elements become visible ***
     if (typeof AOS !== 'undefined') {
