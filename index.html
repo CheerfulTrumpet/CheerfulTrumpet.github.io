@@ -1,52 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfolio</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-
-    <button onclick="toggleThemeMenu()" class="settings-btn"><i class="fas fa-cog fa-lg"></i></button>
-
-    <div id="control-panel" class="theme-panel">
-        <h5 style="border-bottom: 1px solid var(--card-border); padding-bottom: 10px; margin-bottom: 15px;">Theme Engine</h5>
-        <div class="mb-3"><label class="form-label small">Accent</label><input type="color" oninput="changeTheme('accent', this.value)" class="form-control form-control-color w-100" value="#000000"></div>
-        <div class="mb-3"><label class="form-label small">Secondary</label><input type="color" oninput="changeTheme('secondary', this.value)" class="form-control form-control-color w-100" value="#bfbfbf"></div>
-        <div class="mb-3"><label class="form-label small">Background</label><input type="color" oninput="changeTheme('bg', this.value)" class="form-control form-control-color w-100" value="#ffffff"></div>
-    </div>
-
-    <div class="hero-section">
-        <canvas id="background-canvas"></canvas>
-        <div id="analog-clock-container">
-            <div class="clock"><div class="hand hour" id="hour-hand"></div><div class="hand minute" id="minute-hand"></div><div class="hand second" id="second-hand"></div><div class="center-dot"></div></div>
-            <div id="digital-caption">It is currently: <span id="digital-time">Loading...</span></div>
-        </div>
-        <div class="container">
-            <div class="mb-3"><span id="greeting" class="h4 text-accent" style="font-weight: 300; letter-spacing: 2px;">Welcome</span></div>
-            <h1 class="display-3 fw-bold">I'M [YOUR NAME]</h1>
-            <p class="lead mb-4">I am a <span id="typewriter" class="text-accent fw-bold"></span><span class="cursor">|</span></p>
-            <div class="mt-4">
-                <a href="#about" class="btn-custom mx-2"><i class="fas fa-arrow-down"></i> See My Work</a>
-                <a href="images/resume.pdf" target="_blank" class="btn-outline-custom mx-2"><i class="fas fa-file-download"></i> My Resume</a>
-            </div>
-        </div>
-    </div>
-
-    <div id="scroll-sequence-container">
-        <div class="sticky-wrapper">
-            <canvas id="scroll-canvas"></canvas>
-        </div>
-    </div>
-
-    <div id="about" class="container-fluid py-5" style="background-color: var(--bg-color); min-height: 500px;">
+<div id="about" class="container-fluid py-5" style="position: relative; z-index: 50; background-color: var(--bg-color);">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-10 text-center">
+                    
+                    <h2 class="mb-4 text-accent">About Me</h2>
+                    <p class="lead text-accent mb-4">
+                        I am a Computer Science student at <strong>Rutgers University</strong>, bridging the gap between low-level system architecture and high-level cognitive theory.
+                    </p>
+                    <p class="text-white-50 mb-5" style="font-size: 1.1rem; line-height: 1.8;">
+                        While my technical foundation is built on <strong>Data Structures, Calculus, and Computer Architecture</strong>, I am equally driven by the questions raised in my <em>Minds, Machines, & Persons</em> coursework.
+                    </p>
+                    
+                    <div class="mb-5"></div>
+
                     <h2 class="mb-5 text-accent">Beyond the Code</h2>
                     
                     <p class="lead text-accent mb-4" style="line-height: 1.8;">
@@ -85,58 +51,3 @@
             </div>
         </div>
     </div>
-
-    <div id="coursework-spotlight" class="container py-5" style="background-color: var(--bg-color);">
-        <h2 class="text-center mb-5 text-accent">Rutgers University Coursework 🛡️</h2>
-        <div class="row text-center">
-            <div class="col-md-4 mb-4">
-                <div class="profile-card p-4 h-100">
-                    <i class="fas fa-sitemap fa-3x mb-3 text-accent"></i>
-                    <h4 class="text-accent">Data Structures</h4>
-                    <p class="text-white-50">Mastered Hash Tables, BSTs, Heaps, and Big-O analysis.</p>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="profile-card p-4 h-100">
-                    <i class="fas fa-microchip fa-3x mb-3 text-accent"></i>
-                    <h4 class="text-accent">Computer Architecture</h4>
-                    <p class="text-white-50">Assembly Language, Memory Management, and CPU Datapath logic.</p>
-                </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="profile-card p-4 h-100">
-                    <i class="fas fa-vector-square fa-3x mb-3 text-accent"></i>
-                    <h4 class="text-accent">Linear Algebra</h4>
-                    <p class="text-white-50">Vector Spaces, Matrices, and Graph Theory foundations.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="skills-section" class="container py-5" style="background-color: var(--bg-color);">
-        <h2 class="text-center mb-5 text-accent">Core Technical Skills</h2>
-        <div class="row text-center justify-content-center">
-            <div class="col-4 col-md-2 mb-4"><i class="devicon-c-plain text-accent" style="font-size: 4rem;"></i><p class="mt-2 text-white-50">C</p></div>
-            <div class="col-4 col-md-2 mb-4"><i class="devicon-java-plain text-accent" style="font-size: 4rem;"></i><p class="mt-2 text-white-50">Java</p></div>
-            <div class="col-4 col-md-2 mb-4"><i class="devicon-python-plain text-accent" style="font-size: 4rem;"></i><p class="mt-2 text-white-50">Python</p></div>
-            <div class="col-4 col-md-2 mb-4"><i class="devicon-git-plain text-accent" style="font-size: 4rem;"></i><p class="mt-2 text-white-50">Git</p></div>
-        </div>
-    </div>
-
-    <div class="container py-5 text-center" style="background-color: var(--bg-color);">
-        <h2 class="text-accent">Get In Touch</h2>
-        <p class="text-white-50 mb-4">Ready to collaborate on new projects.</p>
-        <div>
-            <a href="#" class="btn-outline-custom mx-2"><i class="fab fa-linkedin"></i> LinkedIn</a>
-            <a href="#" class="btn-outline-custom mx-2"><i class="fab fa-github"></i> GitHub</a>
-            <a href="mailto:your.email@example.com" class="btn-outline-custom mx-2"><i class="fas fa-envelope"></i> Email</a>
-        </div>
-        <footer class="py-4 text-muted mt-5">
-            <p id="philosophy-quote" style="font-style: italic; font-family: serif;">"Loading thought..."</p>
-            <small>&copy; 2025 [Your Name]</small>
-        </footer>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
