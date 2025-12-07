@@ -38,7 +38,7 @@ body {
 
 /* SCROLL SEQUENCE ANIMATION */
 #scroll-sequence-container {
-    height: 200vh; 
+    height: 200vh; /* Provides scrolling room for 28 frames */
     background-color: var(--bg-color);
     position: relative;
 }
