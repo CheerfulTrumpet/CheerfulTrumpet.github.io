@@ -27,6 +27,9 @@ window.changeTheme = function(type, color) {
     }
 };
 
+/* ------------------------------------------------
+   2. PAGE LOAD LOGIC
+   ------------------------------------------------ */
 document.addEventListener('DOMContentLoaded', () => {
     
     if(typeof AOS !== 'undefined') AOS.init();
@@ -191,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /* =========================================
-       PRIORITY 4: SCROLL SEQUENCE (Safety Mode)
+       PRIORITY 4: SCROLL SEQUENCE (FIXED ORDER)
        ========================================= */
     const scrollContainer = document.getElementById('scroll-sequence-container');
     const scrollCanvas = document.getElementById('scroll-canvas');
@@ -203,14 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const imageSeq = { frame: 0 };
         let imagesLoaded = 0;
 
-        const resizeCanvas = () => {
-            scrollCanvas.width = window.innerWidth;
-            scrollCanvas.height = window.innerHeight;
-            render();
-        };
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
+        // --- STEP 1: DEFINE THE RENDER FUNCTION FIRST ---
         const render = () => {
             context.clearRect(0, 0, scrollCanvas.width, scrollCanvas.height);
 
@@ -236,21 +232,34 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
+        // --- STEP 2: DEFINE RESIZE LOGIC (NOW IT CAN FIND 'RENDER') ---
+        const resizeCanvas = () => {
+            scrollCanvas.width = window.innerWidth;
+            scrollCanvas.height = window.innerHeight;
+            render(); // This is safe now because render is defined above!
+        };
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // --- STEP 3: LOAD IMAGES ---
         for (let i = 1; i <= frameCount; i++) {
             const img = new Image();
-            // Path: images/sequence/1.jpg, 2.jpg...
-            img.src = `images/sequence/${i}.jpg`; 
+            img.src = `images/sequence/${i}.jpg`; // Tries to find 1.jpg, 2.jpg...
             
             img.onload = () => {
                 imagesLoaded++;
-                if (i === 1) render();
+                if (i === 1) render(); // Once frame 1 loads, draw it
             };
-            img.onerror = () => { render(); };
+            img.onerror = () => { 
+                console.log("Image fail: " + img.src); 
+                render(); 
+            };
             images.push(img);
         }
 
         render();
 
+        // --- STEP 4: SCROLL LISTENER ---
         window.addEventListener('scroll', () => {
             const rect = scrollContainer.getBoundingClientRect();
             const scrollTop = -rect.top;
