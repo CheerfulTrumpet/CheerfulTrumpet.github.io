@@ -1,5 +1,5 @@
 /* ------------------------------------------------
-   1. GLOBAL THEME FUNCTIONS (Called from HTML)
+   1. GLOBAL THEME FUNCTIONS (Must be at the top for onclick to work)
    ------------------------------------------------ */
 
 // Toggle the Menu Open/Close
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     centerShift_x, centerShift_y, img.width * ratio, img.height * ratio 
                 );
             } else {
-                 // Placeholder for when images are still loading (Frame 0)
+                // Placeholder for when images are still loading 
                 context.font = 'bold 80px Segoe UI';
                 context.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
                 context.textAlign = 'center';
