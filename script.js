@@ -32,7 +32,14 @@ window.changeTheme = function(type, color) {
    ------------------------------------------------ */
 document.addEventListener('DOMContentLoaded', () => {
     
-    // No AOS Init Needed anymore
+    // *** FIX: Initialize AOS so elements become visible ***
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            duration: 1000,
+            once: true,
+            mirror: false
+        });
+    }
 
     /* =========================================
        PRIORITY 1: CLOCK 
