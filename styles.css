@@ -1,10 +1,10 @@
-/* 1. CSS VARIABLES (DEFAULTS: White/Black/Grey) */
+/* 1. CSS VARIABLES (DEFAULTS: White/Black/Silver) */
 :root {
-    --bg-color: #ffffff;             /* White Background */
+    --bg-color: #ffffff;             
     --card-bg: rgba(245, 245, 245, 0.9); 
-    --accent-color: #000000;         /* Black Text/Buttons */
-    --secondary-color: #bfbfbf;      /* Silver/Grey Particles */
-    --text-color: #333333;           /* Dark Grey Body Text */
+    --accent-color: #000000;         
+    --secondary-color: #bfbfbf;      
+    --text-color: #333333;           
     --card-border: rgba(0, 0, 0, 0.1);
 }
 
@@ -26,7 +26,7 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    overflow: hidden; /* Constrains particles to this box */
+    overflow: hidden; 
 }
 
 #background-canvas {
@@ -38,7 +38,7 @@ body {
 
 /* SCROLL SEQUENCE ANIMATION */
 #scroll-sequence-container {
-    height: 200vh; /* Provides scrolling room for 28 frames */
+    height: 200vh; 
     background-color: var(--bg-color);
     position: relative;
 }
@@ -74,7 +74,7 @@ h1, h2, h3, h4, .text-accent { color: var(--accent-color) !important; transition
 }
 .profile-card:hover { transform: translateY(-5px); border-bottom: 3px solid var(--accent-color); }
 
-/* --- FILLED BUTTONS --- */
+/* --- BUTTONS --- */
 .btn-custom {
     background-color: var(--accent-color);
     color: var(--bg-color); 
@@ -90,7 +90,6 @@ h1, h2, h3, h4, .text-accent { color: var(--accent-color) !important; transition
     color: var(--accent-color); 
 }
 
-/* --- OUTLINE BUTTONS (Resume, Contact) --- */
 .btn-outline-custom {
     background-color: transparent;
     color: var(--accent-color);
