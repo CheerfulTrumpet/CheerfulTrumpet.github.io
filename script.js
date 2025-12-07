@@ -4,21 +4,19 @@
 window.toggleThemeMenu = function() {
     const panel = document.getElementById('control-panel');
     const btn = document.querySelector('.settings-btn');
-    const icon = btn.querySelector('i');
+    const icon = btn.querySelector('i'); // Finds the gear icon inside
 
-    // 1. Toggle Panel Visibility
+    // 1. Toggle Panel
     if (panel.style.display === 'none' || panel.style.display === '') {
         panel.style.display = 'block';
     } else {
         panel.style.display = 'none';
     }
 
-    // 2. Trigger Gear Spin Animation
-    // Remove class if it exists to reset animation, then add it back
+    // 2. Force Spin Animation
+    // We remove the class, force a browser "reflow", then add it back
     icon.classList.remove('spinning');
-    
-    // Slight delay to allow browser to register the removal
-    void icon.offsetWidth; // Force reflow (magic trick to restart CSS animation)
+    void icon.offsetWidth; // The magic line that resets the animation
     icon.classList.add('spinning');
 };
 
