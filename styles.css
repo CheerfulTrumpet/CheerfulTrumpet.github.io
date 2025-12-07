@@ -195,3 +195,24 @@ h1, h2, h3, h4, .text-accent { color: var(--accent-color) !important; transition
 .settings-btn i.spinning {
     animation: spin-gear 0.5s ease-in-out;
 }
+
+/* --- SPEECH BUBBLE ARROW FOR TOAST --- */
+/* Allow things to stick outside the box */
+#themeToast {
+    overflow: visible !important; 
+}
+
+/* Create the triangle pointing down */
+#themeToast::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;    /* Hangs off the bottom */
+    right: 20px;      /* Aligns with the gear button */
+    border-width: 10px 10px 0;
+    border-style: solid;
+    /* The color must match your toast background var(--card-bg) */
+    border-color: var(--card-bg) transparent;
+    display: block;
+    width: 0;
+    z-index: 11001;
+}
