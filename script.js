@@ -197,21 +197,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /* =========================================
-       PRIORITY 4: SCROLL SEQUENCE (NOW LOOKING FOR PNGs)
+       PRIORITY 4: SCROLL SEQUENCE (UPDATED FOR REMOVEBG NAMES)
        ========================================= */
     const scrollContainer = document.getElementById('scroll-sequence-container');
     const scrollCanvas = document.getElementById('scroll-canvas');
     
     if (scrollContainer && scrollCanvas) {
         const context = scrollCanvas.getContext('2d');
-        const frameCount = 28; 
+        const frameCount = 20; // *** CHANGED TO 20 ***
         const images = []; 
         const imageSeq = { frame: 0 };
         let imagesLoaded = 0;
 
         // --- STEP 1: DEFINE RENDER FUNCTION ---
         const render = () => {
-            // FILL BACKGROUND WITH THEME COLOR (Invisible if PNGs are transparent)
+            // Fill background so transparent PNGs don't show black
             const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim();
             context.fillStyle = bgColor;
             context.fillRect(0, 0, scrollCanvas.width, scrollCanvas.height);
@@ -222,19 +222,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (images[imageSeq.frame] && images[imageSeq.frame].complete && images[imageSeq.frame].naturalWidth !== 0) {
                 img = images[imageSeq.frame];
-                // CONTAIN SCALING
+                
                 hRatio = scrollCanvas.width / img.width;
                 vRatio = scrollCanvas.height / img.height;
                 ratio = Math.min(hRatio, vRatio); 
+                
                 centerShift_x = (scrollCanvas.width - img.width * ratio) / 2;
                 centerShift_y = (scrollCanvas.height - img.height * ratio) / 2;
+                
                 context.drawImage(img, 0, 0, img.width, img.height, centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
             } else {
-                // FALLBACK TEXT
                 context.font = 'bold 40px Segoe UI';
                 context.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
                 context.textAlign = 'center';
-                context.fillText("Loading PNGs...", scrollCanvas.width / 2, scrollCanvas.height / 2);
+                context.fillText("Loading Sequence...", scrollCanvas.width / 2, scrollCanvas.height / 2);
             }
         };
 
@@ -247,11 +248,12 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        // --- STEP 3: LOAD IMAGES (UPDATED TO .PNG) ---
+        // --- STEP 3: LOAD IMAGES (NEW NAMING PATTERN) ---
         for (let i = 1; i <= frameCount; i++) {
             const img = new Image();
-            // *** CHANGE IS HERE: Looking for .png now ***
-            img.src = `images/sequence/${i}.png`; 
+            
+            // *** UPDATED LINE: Matches "1-removebg-preview.png" ***
+            img.src = `images/sequence/${i}-removebg-preview.png`; 
             
             img.onload = () => {
                 imagesLoaded++;
