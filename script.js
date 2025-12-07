@@ -40,7 +40,6 @@ window.changeTheme = function(type, color) {
 document.addEventListener('DOMContentLoaded', () => {
 
     /* --- PRIORITY 1: INITIALIZE ANIMATIONS (AOS) --- */
-    // This effectively "turns on" the visibility of your elements
     if (typeof AOS !== 'undefined') {
         AOS.init({
             duration: 1000,
@@ -223,31 +222,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    /* --- PRIORITY 5: SCROLL SEQUENCE ANIMATION --- */
+    /* --- PRIORITY 5: SMOOTH SCROLL SEQUENCE ANIMATION (FIXED) --- */
     const scrollContainer = document.getElementById('scroll-sequence-container');
     const scrollCanvas = document.getElementById('scroll-canvas');
     
     if (scrollContainer && scrollCanvas) {
         const context = scrollCanvas.getContext('2d');
-        const frameCount = 20; // Number of images you have
+        const frameCount = 20; 
         const images = []; 
-        const imageSeq = { frame: 0 };
-        let imagesLoaded = 0;
+        
+        // --- NEW STATE FOR SMOOTHING ---
+        let currentFrame = 0; // The frame we are currently showing (can be 1.5, 1.6 etc)
+        let targetFrame = 0;  // The frame the scrollbar says we SHOULD be at
+        let isLoaded = false; // Flag to check if images are ready
 
-        // Render Function: Draws the current frame to the canvas
-        const render = () => {
+        // Render Function
+        const render = (frameIndex) => {
             // Fill background
             const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim();
             context.fillStyle = bgColor;
             context.fillRect(0, 0, scrollCanvas.width, scrollCanvas.height);
 
-            let img = null;
-            
-            // Safety check: Does image exist and is it loaded?
-            if (images[imageSeq.frame] && images[imageSeq.frame].complete && images[imageSeq.frame].naturalWidth !== 0) {
-                img = images[imageSeq.frame];
+            // Calculate exact integer frame
+            const index = Math.round(frameIndex);
+
+            if (images[index] && images[index].complete) {
+                const img = images[index];
                 
-                // Calculate "Contain" fit
+                // Contain Scaling
                 const hRatio = scrollCanvas.width / img.width;
                 const vRatio = scrollCanvas.height / img.height;
                 const ratio = Math.min(hRatio, vRatio); 
@@ -257,62 +259,64 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 context.drawImage(img, 0, 0, img.width, img.height, centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
             } 
-            else {
-                // Fallback text if loading or missing
-                context.font = 'bold 30px Segoe UI';
-                context.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
-                context.textAlign = 'center';
-                context.fillText("Loading Sequence...", scrollCanvas.width / 2, scrollCanvas.height / 2);
-            }
         };
 
-        // Resize Listener
+        // 1. Resize Listener
         const resizeScrollCanvas = () => {
             scrollCanvas.width = window.innerWidth;
             scrollCanvas.height = window.innerHeight;
-            render();
+            render(currentFrame);
         };
         window.addEventListener('resize', resizeScrollCanvas);
         resizeScrollCanvas();
 
-        // Load Images
+        // 2. Load Images
+        let imagesLoadedCount = 0;
         for (let i = 1; i <= frameCount; i++) {
             const img = new Image();
-            // Path to your images
             img.src = `images/sequence/${i}-removebg-preview.png`; 
             
             img.onload = () => {
-                imagesLoaded++;
-                if (i === 1) render(); // Draw first frame immediately
-            };
-            img.onerror = () => { 
-                console.log("Missing file: " + img.src); 
+                imagesLoadedCount++;
+                if (imagesLoadedCount === frameCount) isLoaded = true;
+                if (i === 1) render(0); 
             };
             images.push(img);
         }
 
-        render();
-
-        // Scroll Listener
+        // 3. Scroll Listener (UPDATES TARGET ONLY)
         window.addEventListener('scroll', () => {
             const rect = scrollContainer.getBoundingClientRect();
-            // Calculate how far we are through the section
             const scrollTop = -rect.top;
             const maxScroll = scrollContainer.offsetHeight - window.innerHeight;
             
             let scrollFraction = scrollTop / maxScroll;
-            // Clamp value between 0 and 1
             if (scrollFraction < 0) scrollFraction = 0;
             if (scrollFraction > 1) scrollFraction = 1;
 
-            // Map scroll percentage to frame number
-            const frameIndex = Math.min(frameCount - 1, Math.ceil(scrollFraction * frameCount));
-            
-            if (imageSeq.frame !== frameIndex) {
-                imageSeq.frame = frameIndex;
-                requestAnimationFrame(render);
-            }
+            // Set the TARGET frame based on scroll
+            targetFrame = Math.min(frameCount - 1, Math.ceil(scrollFraction * frameCount));
         });
+
+        // 4. Animation Loop (INTERPOLATION / LERP)
+        // This makes the 'current' frame chase the 'target' frame smoothly
+        const smoothAnimationLoop = () => {
+            // "Lerp" (Linear Interpolation) formula:
+            // current = current + (target - current) * smoothFactor
+            // 0.1 means it moves 10% of the way there every frame
+            const diff = targetFrame - currentFrame;
+            
+            // If the difference is significant, update and render
+            if (Math.abs(diff) > 0.05) {
+                currentFrame += diff * 0.1; // Adjust 0.1 to change speed (lower = smoother/slower)
+                render(currentFrame);
+            }
+            
+            requestAnimationFrame(smoothAnimationLoop);
+        };
+        
+        // Start the smooth loop
+        smoothAnimationLoop();
     }
 
 
