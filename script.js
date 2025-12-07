@@ -303,4 +303,4 @@ document.addEventListener('DOMContentLoaded', () => {
         quoteElement.innerText = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
     }
 
-}); // <--- THIS MATCHES THE OPENING BRACKET AT THE TOP
+); // <--- THIS MATCHES THE OPENING BRACKET AT THE TOP
