@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.directionX = (Math.random() * 1) - 0.5;
                 this.directionY = (Math.random() * 1) - 0.5;
                 this.size = (Math.random() * 2) + 1;
+                // Grab color from CSS
                 const cssColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim();
                 this.color = cssColor || '#bfbfbf'; 
             }
@@ -132,12 +133,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const images = []; 
         const imageSeq = { frame: 0 };
 
-      // 1. PRELOAD IMAGES
+        // 1. PRELOAD IMAGES
         for (let i = 1; i <= frameCount; i++) {
             const img = new Image();
-            // *** UPDATED LINE ***
-            // This constructs the path "images/sequence/1.jpg", "images/sequence/2.jpg", etc.
-            img.src = `images/sequence/${i}.jpg`; 
+            img.src = `images/sequence/${i}.jpg`; // Assumes files are 1.jpg, 2.jpg, etc.
             images.push(img);
         }
 
@@ -152,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 2. RENDER FUNCTION
         const render = () => {
-            if (images[imageSeq.frame]) {
+            if (images[imageSeq.frame] && images[imageSeq.frame].complete) {
                 const img = images[imageSeq.frame];
                 
                 const hRatio = scrollCanvas.width / img.width;
@@ -177,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        images[0].onload = render; // Draw first frame when ready
+        images[0].onload = render;
 
         // 3. SCROLL LISTENER
         window.addEventListener('scroll', () => {
@@ -282,4 +281,5 @@ document.addEventListener('DOMContentLoaded', () => {
     if(quoteElement) {
         quoteElement.innerText = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
     }
+
 });
