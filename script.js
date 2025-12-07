@@ -215,8 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const img = images[imageSeq.frame];
                 const hRatio = scrollCanvas.width / img.width;
                 const vRatio = scrollCanvas.height / img.height;
-                const ratio = Math.max(hRatio, vRatio);
-                const centerShift_x = (scrollCanvas.width - img.width * ratio) / 2;
+               const ratio = Math.min(hRatio, vRatio); // Use MIN to ensure the entire image is contained                const centerShift_x = (scrollCanvas.width - img.width * ratio) / 2;
                 const centerShift_y = (scrollCanvas.height - img.height * ratio) / 2;
                 
                 context.drawImage(img, 0, 0, img.width, img.height, centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
