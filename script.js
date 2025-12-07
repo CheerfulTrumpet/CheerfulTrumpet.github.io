@@ -32,9 +32,7 @@ window.changeTheme = function(type, color) {
    ------------------------------------------------ */
 document.addEventListener('DOMContentLoaded', () => {
     
-    try {
-        if(typeof AOS !== 'undefined') AOS.init();
-    } catch (e) { console.log("AOS Init Error", e); }
+    // No AOS Init Needed anymore
 
     /* =========================================
        PRIORITY 1: CLOCK 
@@ -215,16 +213,20 @@ document.addEventListener('DOMContentLoaded', () => {
             context.fillStyle = bgColor;
             context.fillRect(0, 0, scrollCanvas.width, scrollCanvas.height);
 
+            let img = null;
+            let centerShift_x = 0; let centerShift_y = 0;
+            let hRatio = 0; let vRatio = 0; let ratio = 0;
+
             if (images[imageSeq.frame] && images[imageSeq.frame].complete && images[imageSeq.frame].naturalWidth !== 0) {
-                const img = images[imageSeq.frame];
+                img = images[imageSeq.frame];
                 
                 // CONTAIN SCALING
-                const hRatio = scrollCanvas.width / img.width;
-                const vRatio = scrollCanvas.height / img.height;
-                const ratio = Math.min(hRatio, vRatio); 
+                hRatio = scrollCanvas.width / img.width;
+                vRatio = scrollCanvas.height / img.height;
+                ratio = Math.min(hRatio, vRatio); 
                 
-                const centerShift_x = (scrollCanvas.width - img.width * ratio) / 2;
-                const centerShift_y = (scrollCanvas.height - img.height * ratio) / 2;
+                centerShift_x = (scrollCanvas.width - img.width * ratio) / 2;
+                centerShift_y = (scrollCanvas.height - img.height * ratio) / 2;
                 
                 context.drawImage(img, 0, 0, img.width, img.height, centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
             } else {
@@ -247,6 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- STEP 3: LOAD IMAGES ---
         for (let i = 1; i <= frameCount; i++) {
             const img = new Image();
+            // *** UPDATED FILENAME: 1-removebg-preview.png ***
             img.src = `images/sequence/${i}-removebg-preview.png`; 
             
             img.onload = () => {
