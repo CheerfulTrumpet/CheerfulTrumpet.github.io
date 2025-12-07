@@ -1,5 +1,5 @@
 /* ------------------------------------------------
-   1. GLOBAL THEME FUNCTIONS (Must be at the top for onclick to work)
+   1. GLOBAL THEME FUNCTIONS (Called from HTML)
    ------------------------------------------------ */
 
 // Toggle the Menu Open/Close
@@ -22,7 +22,6 @@ window.changeTheme = function(type, color) {
     } 
     else if (type === 'secondary') {
         root.style.setProperty('--secondary-color', color);
-        // Force particles to update immediately
         if (window.particlesArray) {
             window.particlesArray.forEach(p => p.color = color);
         }
@@ -42,7 +41,87 @@ document.addEventListener('DOMContentLoaded', () => {
         AOS.init();
     }
 
-    /* --- PARTICLE NETWORK --- */
+    /* =========================================
+       PRIORITY 1: CLOCK (Moved to top so it always works)
+       ========================================= */
+    function updateTimeAndGreeting() {
+        const now = new Date();
+        const seconds = now.getSeconds();
+        const minutes = now.getMinutes();
+        const hours = now.getHours();
+        
+        const secondsDegrees = ((seconds / 60) * 360);
+        const minutesDegrees = ((minutes / 60) * 360) + ((seconds/60)*6);
+        const hoursDegrees = ((hours / 12) * 360) + ((minutes/60)*30);
+
+        const sHand = document.getElementById('second-hand');
+        const mHand = document.getElementById('minute-hand');
+        const hHand = document.getElementById('hour-hand');
+
+        // Only update if elements exist
+        if(sHand) sHand.style.transform = `translateX(-50%) rotate(${secondsDegrees}deg)`;
+        if(mHand) mHand.style.transform = `translateX(-50%) rotate(${minutesDegrees}deg)`;
+        if(hHand) hHand.style.transform = `translateX(-50%) rotate(${hoursDegrees}deg)`;
+
+        const displayMin = minutes < 10 ? '0' + minutes : minutes;
+        const displayHour = hours % 12 || 12; 
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const dTime = document.getElementById('digital-time');
+        if(dTime) dTime.innerText = `${displayHour}:${displayMin} ${ampm}`;
+
+        const greetingElement = document.getElementById('greeting');
+        if(greetingElement) {
+            let greetingText = "Welcome";
+            if (hours < 12) greetingText = "Good Morning!";
+            else if (hours < 18) greetingText = "Good Afternoon!";
+            else greetingText = "Good Evening!";
+            greetingElement.innerText = greetingText;
+        }
+    }
+    // Run immediately, then interval
+    updateTimeAndGreeting();
+    setInterval(updateTimeAndGreeting, 1000);
+
+
+    /* =========================================
+       PRIORITY 2: TYPEWRITER
+       ========================================= */
+    const words = ["CS Student.", "Problem Solver.", "C Developer.", "Tech Enthusiast."];
+    let i = 0;
+    let timer;
+
+    function typeWriter() {
+        const heading = document.getElementById("typewriter");
+        if (!heading) return;
+        const currentWord = words[i % words.length];
+        const fullText = heading.innerText;
+        if (heading.getAttribute("data-state") === "deleting") {
+            heading.innerText = currentWord.substring(0, fullText.length - 1);
+            timer = setTimeout(typeWriter, 50);
+            if (heading.innerText === "") {
+                heading.setAttribute("data-state", "typing");
+                i++;
+            }
+        } else {
+            heading.innerText = currentWord.substring(0, fullText.length + 1);
+            timer = setTimeout(typeWriter, 150);
+            if (heading.innerText === currentWord) {
+                heading.setAttribute("data-state", "deleting");
+                clearTimeout(timer);
+                timer = setTimeout(typeWriter, 2000);
+            }
+        }
+    }
+    const twElement = document.getElementById("typewriter");
+    if(twElement) {
+        twElement.setAttribute("data-state", "typing");
+        typeWriter();
+    }
+
+
+    /* =========================================
+       PRIORITY 3: PARTICLE NETWORK
+       ========================================= */
     const canvas = document.getElementById("background-canvas");
     if (canvas) {
         const ctx = canvas.getContext("2d");
@@ -58,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.directionX = (Math.random() * 1) - 0.5;
                 this.directionY = (Math.random() * 1) - 0.5;
                 this.size = (Math.random() * 2) + 1;
-                // Grab color from CSS
                 const cssColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim();
                 this.color = cssColor || '#bfbfbf'; 
             }
@@ -123,7 +201,10 @@ document.addEventListener('DOMContentLoaded', () => {
         animate();
     }
 
-    /* --- SCROLL SEQUENCE --- */
+
+    /* =========================================
+       PRIORITY 4: SCROLL SEQUENCE (Robust Mode)
+       ========================================= */
     const scrollContainer = document.getElementById('scroll-sequence-container');
     const scrollCanvas = document.getElementById('scroll-canvas');
     
@@ -132,11 +213,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const frameCount = 28; 
         const images = []; 
         const imageSeq = { frame: 0 };
+        let imagesLoaded = 0;
 
-        // 1. PRELOAD IMAGES
+        // 1. PRELOAD IMAGES with Error Checking
         for (let i = 1; i <= frameCount; i++) {
             const img = new Image();
-            img.src = `images/sequence/${i}.jpg`; // Assumes files are 1.jpg, 2.jpg, etc.
+            // Path: images/sequence/1.jpg, 2.jpg...
+            img.src = `images/sequence/${i}.jpg`; 
+            
+            img.onload = () => {
+                imagesLoaded++;
+                if(imagesLoaded === 1) render(); // Draw first frame as soon as it exists
+            };
+            img.onerror = () => {
+                console.error(`Failed to load image: ${img.src}`);
+            }
             images.push(img);
         }
 
@@ -151,7 +242,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 2. RENDER FUNCTION
         const render = () => {
-            if (images[imageSeq.frame] && images[imageSeq.frame].complete) {
+            // Check if frame exists and is loaded
+            if (images[imageSeq.frame] && images[imageSeq.frame].complete && images[imageSeq.frame].naturalWidth !== 0) {
                 const img = images[imageSeq.frame];
                 
                 const hRatio = scrollCanvas.width / img.width;
@@ -168,15 +260,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     centerShift_x, centerShift_y, img.width * ratio, img.height * ratio 
                 );
             } else {
-                // Placeholder for when images are still loading 
-                context.font = 'bold 80px Segoe UI';
+                // FALLBACK: If images are missing, show this text instead of blank space
+                context.clearRect(0, 0, scrollCanvas.width, scrollCanvas.height);
+                context.font = '30px Segoe UI';
                 context.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
                 context.textAlign = 'center';
-                context.fillText(`Loading Frames...`, scrollCanvas.width / 2, scrollCanvas.height / 2);
+                context.fillText(`Loading Sequence...`, scrollCanvas.width / 2, scrollCanvas.height / 2);
+                context.font = '20px Segoe UI';
+                context.fillText(`Ensure images are in images/sequence/1.jpg`, scrollCanvas.width / 2, (scrollCanvas.height / 2) + 40);
             }
         };
-
-        images[0].onload = render;
 
         // 3. SCROLL LISTENER
         window.addEventListener('scroll', () => {
@@ -201,75 +294,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
-    /* --- TYPEWRITER --- */
-    const words = ["CS Student.", "Problem Solver.", "C Developer.", "Tech Enthusiast."];
-    let i = 0;
-    let timer;
-
-    function typeWriter() {
-        const heading = document.getElementById("typewriter");
-        if (!heading) return;
-        const currentWord = words[i % words.length];
-        const fullText = heading.innerText;
-        if (heading.getAttribute("data-state") === "deleting") {
-            heading.innerText = currentWord.substring(0, fullText.length - 1);
-            timer = setTimeout(typeWriter, 50);
-            if (heading.innerText === "") {
-                heading.setAttribute("data-state", "typing");
-                i++;
-            }
-        } else {
-            heading.innerText = currentWord.substring(0, fullText.length + 1);
-            timer = setTimeout(typeWriter, 150);
-            if (heading.innerText === currentWord) {
-                heading.setAttribute("data-state", "deleting");
-                clearTimeout(timer);
-                timer = setTimeout(typeWriter, 2000);
-            }
-        }
-    }
-    const twElement = document.getElementById("typewriter");
-    if(twElement) {
-        twElement.setAttribute("data-state", "typing");
-        typeWriter();
-    }
-
-    /* --- CLOCK --- */
-    function updateTimeAndGreeting() {
-        const now = new Date();
-        const seconds = now.getSeconds();
-        const minutes = now.getMinutes();
-        const hours = now.getHours();
-        
-        const secondsDegrees = ((seconds / 60) * 360);
-        const minutesDegrees = ((minutes / 60) * 360) + ((seconds/60)*6);
-        const hoursDegrees = ((hours / 12) * 360) + ((minutes/60)*30);
-
-        const sHand = document.getElementById('second-hand');
-        const mHand = document.getElementById('minute-hand');
-        const hHand = document.getElementById('hour-hand');
-
-        if(sHand) sHand.style.transform = `translateX(-50%) rotate(${secondsDegrees}deg)`;
-        if(mHand) mHand.style.transform = `translateX(-50%) rotate(${minutesDegrees}deg)`;
-        if(hHand) hHand.style.transform = `translateX(-50%) rotate(${hoursDegrees}deg)`;
-
-        const displayMin = minutes < 10 ? '0' + minutes : minutes;
-        const displayHour = hours % 12 || 12; 
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        const dTime = document.getElementById('digital-time');
-        if(dTime) dTime.innerText = `${displayHour}:${displayMin} ${ampm}`;
-
-        const greetingElement = document.getElementById('greeting');
-        let greetingText = "Welcome";
-        if (hours < 12) greetingText = "Good Morning!";
-        else if (hours < 18) greetingText = "Good Afternoon!";
-        else greetingText = "Good Evening!";
-        if(greetingElement) greetingElement.innerText = greetingText;
-    }
-    updateTimeAndGreeting();
-    setInterval(updateTimeAndGreeting, 1000);
-    
     /* --- PHILOSOPHY QUOTE --- */
     const quotes = [
         "The question of whether a computer can think is no more interesting than the question of whether a submarine can swim. - Dijkstra",
