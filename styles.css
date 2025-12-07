@@ -177,3 +177,13 @@ h1, h2, h3, h4, .text-accent { color: var(--accent-color) !important; transition
     position: relative;
     z-index: 5;
 }
+
+/* SPINNING ANIMATION FOR GEAR ICON */
+@keyframes spin-gear {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(180deg); }
+}
+
+.fa-cog.spinning {
+    animation: spin-gear 0.5s ease-in-out;
+}
