@@ -32,7 +32,6 @@ window.changeTheme = function(type, color) {
    ------------------------------------------------ */
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Initialize Animations
     try {
         if(typeof AOS !== 'undefined') AOS.init();
     } catch (e) { console.log("AOS Init Error", e); }
@@ -193,6 +192,91 @@ document.addEventListener('DOMContentLoaded', () => {
 
         init();
         animate();
+    }
+
+
+    /* =========================================
+       PRIORITY 4: SCROLL SEQUENCE
+       ========================================= */
+    const scrollContainer = document.getElementById('scroll-sequence-container');
+    const scrollCanvas = document.getElementById('scroll-canvas');
+    
+    if (scrollContainer && scrollCanvas) {
+        const context = scrollCanvas.getContext('2d');
+        const frameCount = 20; 
+        const images = []; 
+        const imageSeq = { frame: 0 };
+        let imagesLoaded = 0;
+
+        // --- STEP 1: DEFINE RENDER FUNCTION ---
+        const render = () => {
+            // Fill background with theme color
+            const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim();
+            context.fillStyle = bgColor;
+            context.fillRect(0, 0, scrollCanvas.width, scrollCanvas.height);
+
+            if (images[imageSeq.frame] && images[imageSeq.frame].complete && images[imageSeq.frame].naturalWidth !== 0) {
+                const img = images[imageSeq.frame];
+                
+                // CONTAIN SCALING
+                const hRatio = scrollCanvas.width / img.width;
+                const vRatio = scrollCanvas.height / img.height;
+                const ratio = Math.min(hRatio, vRatio); 
+                
+                const centerShift_x = (scrollCanvas.width - img.width * ratio) / 2;
+                const centerShift_y = (scrollCanvas.height - img.height * ratio) / 2;
+                
+                context.drawImage(img, 0, 0, img.width, img.height, centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
+            } else {
+                context.font = 'bold 40px Segoe UI';
+                context.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
+                context.textAlign = 'center';
+                context.fillText("Loading Sequence...", scrollCanvas.width / 2, scrollCanvas.height / 2);
+            }
+        };
+
+        // --- STEP 2: RESIZE LISTENER ---
+        const resizeCanvas = () => {
+            scrollCanvas.width = window.innerWidth;
+            scrollCanvas.height = window.innerHeight;
+            render();
+        };
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // --- STEP 3: LOAD IMAGES ---
+        for (let i = 1; i <= frameCount; i++) {
+            const img = new Image();
+            img.src = `images/sequence/${i}-removebg-preview.png`; 
+            
+            img.onload = () => {
+                imagesLoaded++;
+                if (i === 1) render(); 
+            };
+            img.onerror = () => { 
+                console.log("Missing file: " + img.src); 
+                render(); 
+            };
+            images.push(img);
+        }
+
+        render();
+
+        // --- STEP 4: SCROLL LISTENER ---
+        window.addEventListener('scroll', () => {
+            const rect = scrollContainer.getBoundingClientRect();
+            const scrollTop = -rect.top;
+            const maxScroll = scrollContainer.offsetHeight - window.innerHeight;
+            let scrollFraction = scrollTop / maxScroll;
+            if (scrollFraction < 0) scrollFraction = 0;
+            if (scrollFraction > 1) scrollFraction = 1;
+
+            const frameIndex = Math.min(frameCount - 1, Math.ceil(scrollFraction * frameCount));
+            if (imageSeq.frame !== frameIndex) {
+                imageSeq.frame = frameIndex;
+                requestAnimationFrame(render);
+            }
+        });
     }
 
     /* --- PHILOSOPHY QUOTE --- */
