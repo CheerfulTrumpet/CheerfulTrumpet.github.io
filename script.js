@@ -33,9 +33,17 @@ window.changeTheme = function(type, color) {
 document.addEventListener('DOMContentLoaded', () => {
 
     /* --- PRIORITY 1: ANIMATION INIT (AOS) --- */
+    // This turns the animations ON
     if (typeof AOS !== 'undefined') {
-        AOS.init({ duration: 1000, once: true, mirror: false });
+        AOS.init({
+            duration: 1000, // Animation speed (1 second)
+            once: true,     // Only animate once (don't fade out when scrolling up)
+            mirror: false,
+            offset: 100     // Start animation when element is 100px from bottom
+        });
     }
+
+    // ... rest of your code ...
 
     /* --- PRIORITY 2: CLOCK --- */
     function updateTimeAndGreeting() {
