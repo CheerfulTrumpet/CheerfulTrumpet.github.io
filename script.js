@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     /* =========================================
        PRIORITY 0: ANIMATION INIT (CRITICAL)
        ========================================= */
+    // This makes your elements visible!
     if (typeof AOS !== 'undefined') {
         AOS.init({
             duration: 1000,
@@ -258,7 +259,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- STEP 3: LOAD IMAGES ---
         for (let i = 1; i <= frameCount; i++) {
             const img = new Image();
-            // *** UPDATED FILENAME: 1-removebg-preview.png ***
             img.src = `images/sequence/${i}-removebg-preview.png`; 
             
             img.onload = () => {
@@ -303,4 +303,4 @@ document.addEventListener('DOMContentLoaded', () => {
         quoteElement.innerText = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
     }
 
-}); // <--- THIS IS THE CORRECT CLOSING BRACKET FOR DOMContentLoaded
+}); // <--- THIS MATCHES THE OPENING BRACKET AT THE TOP
