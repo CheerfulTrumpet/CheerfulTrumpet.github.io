@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /* =========================================
-       PRIORITY 4: SCROLL SEQUENCE (FIXED ORDER & SCALING)
+       PRIORITY 4: SCROLL SEQUENCE (FIXED VARIABLES)
        ========================================= */
     const scrollContainer = document.getElementById('scroll-sequence-container');
     const scrollCanvas = document.getElementById('scroll-canvas');
@@ -209,42 +209,47 @@ document.addEventListener('DOMContentLoaded', () => {
         const imageSeq = { frame: 0 };
         let imagesLoaded = 0;
 
-        // --- STEP 1: DEFINE THE RENDER FUNCTION FIRST ---
-        // This function must exist before we try to use it in resizeCanvas
+        // --- STEP 1: DEFINE RENDER FUNCTION ---
         const render = () => {
             context.clearRect(0, 0, scrollCanvas.width, scrollCanvas.height);
 
+            // Ensure variables are declared outside conditional to avoid ReferenceError
+            let img = null;
+            let centerShift_x = 0;
+            let centerShift_y = 0;
+            let hRatio = 0;
+            let vRatio = 0;
+            let ratio = 0;
+
             if (images[imageSeq.frame] && images[imageSeq.frame].complete && images[imageSeq.frame].naturalWidth !== 0) {
-                const img = images[imageSeq.frame];
+                img = images[imageSeq.frame];
                 
                 // *** SCALING LOGIC: CONTAIN ***
-                // Math.min ensures the entire image fits (no cropping)
-                const hRatio = scrollCanvas.width / img.width;
-                const vRatio = scrollCanvas.height / img.height;
-                const ratio = Math.min(hRatio, vRatio); 
+                hRatio = scrollCanvas.width / img.width;
+                vRatio = scrollCanvas.height / img.height;
+                ratio = Math.min(hRatio, vRatio); // Use Math.min to contain
                 
-                // Center the image
-                const centerShift_x = (scrollCanvas.width - img.width * ratio) / 2;
-                const centerShift_y = (scrollCanvas.height - img.height * ratio) / 2;
+                centerShift_x = (scrollCanvas.width - img.width * ratio) / 2;
+                centerShift_y = (scrollCanvas.height - img.height * ratio) / 2;
                 
                 context.drawImage(img, 0, 0, img.width, img.height, centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
             } else {
-                // FALLBACK
+                // FALLBACK TEXT
                 const rectW = 600; const rectH = 300;
                 context.fillStyle = "rgba(128, 128, 128, 0.1)";
                 context.fillRect((scrollCanvas.width/2)-(rectW/2), (scrollCanvas.height/2)-(rectH/2), rectW, rectH);
                 context.font = 'bold 40px Segoe UI';
                 context.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
                 context.textAlign = 'center';
-                context.fillText("Loading...", scrollCanvas.width / 2, scrollCanvas.height / 2);
+                context.fillText("Loading Sequence...", scrollCanvas.width / 2, scrollCanvas.height / 2);
             }
         };
 
-        // --- STEP 2: DEFINE RESIZE LOGIC ---
+        // --- STEP 2: RESIZE LISTENER ---
         const resizeCanvas = () => {
             scrollCanvas.width = window.innerWidth;
             scrollCanvas.height = window.innerHeight;
-            render(); // Now render is defined, so this works!
+            render();
         };
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
@@ -265,6 +270,8 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             images.push(img);
         }
+
+        render();
 
         // --- STEP 4: SCROLL LISTENER ---
         window.addEventListener('scroll', () => {
