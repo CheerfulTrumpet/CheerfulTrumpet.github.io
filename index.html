@@ -23,13 +23,17 @@
 
     <div class="hero-section">
         <canvas id="background-canvas"></canvas>
+        
         <div id="analog-clock-container">
             <div class="clock"><div class="hand hour" id="hour-hand"></div><div class="hand minute" id="minute-hand"></div><div class="hand second" id="second-hand"></div><div class="center-dot"></div></div>
             <div id="digital-caption">It is currently: <span id="digital-time">Loading...</span></div>
         </div>
+
         <div class="container" data-aos="fade-down" data-aos-duration="1000">
             <div class="mb-3"><span id="greeting" class="h4 text-accent" style="font-weight: 300; letter-spacing: 2px;">Welcome</span></div>
-            <h1 class="display-3 fw-bold">I'M XUAN</h1>
+            
+            <h1 class="display-1 fw-bolder text-uppercase text-accent" style="margin-top: 20px; margin-bottom: 30px;">I'M XUAN</h1>
+            
             <p class="lead mb-4">I am a <span id="typewriter" class="text-accent fw-bold"></span><span class="cursor">|</span></p>
             <div class="mt-4">
                 <a href="#about" class="btn-custom mx-2"><i class="fas fa-arrow-down"></i> See My Work</a>
@@ -49,36 +53,36 @@
             <div class="row justify-content-center">
                 <div class="col-md-10 text-center">
                     
-                    <h2 class="display-5 fw-bolder text-uppercase mb-5 text-accent">
+                    <h2 class="display-5 fw-bolder text-uppercase mb-5 text-accent" data-aos="fade-up">
                         About Me
                     </h2>
-                    <div class="mb-5"></div>
-                    <p class="lead text-accent mb-4">
+                    
+                    <p class="lead text-accent mb-4" data-aos="fade-up" data-aos-delay="100">
                         I am a Computer Science student at <strong>Rutgers University</strong>, bridging the gap between low-level system architecture and high-level cognitive theory.
                     </p>
-                    <p class="text-accent mb-5" style="font-size: 1.1rem; line-height: 1.8;">
+                    <p class="text-accent mb-5" style="font-size: 1.1rem; line-height: 1.8;" data-aos="fade-up" data-aos-delay="200">
                         While my technical foundation is built on <strong>Data Structures, Calculus, and Computer Architecture</strong>, I am equally driven by the questions raised in my <em>Minds, Machines, & Persons</em> coursework.
                     </p>
                     
                     <div class="mb-5"></div>
 
-                    <h2 class="display-5 fw-bolder text-uppercase mb-5 text-accent">
+                    <h2 class="display-5 fw-bolder text-uppercase mb-5 text-accent" data-aos="fade-up">
                         Beyond the Code
                     </h2>
                     
-                    <p class="lead text-accent mb-4" style="line-height: 1.8;">
+                    <p class="lead text-accent mb-4" style="line-height: 1.8;" data-aos="fade-up" data-aos-delay="100">
                         Growing up in a low-income <strong>Chinese American</strong> household, I learned early on that opportunity isn't given—it's created. Watching my family navigate a new world with limited resources instilled in me a relentless work ethic and a deep understanding of the <strong>transformative power of education</strong>.
                     </p>
 
-                    <p class="text-accent mb-4" style="font-size: 1.1rem; line-height: 1.8; opacity: 0.9;">
+                    <p class="text-accent mb-4" style="font-size: 1.1rem; line-height: 1.8; opacity: 0.9;" data-aos="fade-up" data-aos-delay="200">
                         My ambition is to build a future where I can give back to the people who sacrificed everything for me. My ultimate dream is to one day <strong>take my family traveling around the world</strong>.
                     </p>
 
-                    <p class="text-accent" style="font-size: 1.1rem; line-height: 1.8; opacity: 0.9;">
+                    <p class="text-accent" style="font-size: 1.1rem; line-height: 1.8; opacity: 0.9;" data-aos="fade-up" data-aos-delay="300">
                         I thrive in collaborative environments because I genuinely love <strong>learning from others</strong>. I believe the best solutions come from listening to diverse perspectives and working together.
                     </p>
                     
-                    <div class="row mt-5 justify-content-center">
+                    <div class="row mt-5 justify-content-center" data-aos="fade-up" data-aos-delay="400">
                         <div class="col-md-4 mb-3">
                             <div class="photo-frame">
                                 <img src="images/mmexport1765062031464.jpg" alt="Important life moment" class="img-fluid shadow-sm">
@@ -103,27 +107,28 @@
         </div>
     </div>
 
-    <div id="coursework-spotlight" class="container py-5" style="position: relative; z-index: 50; background-color: var(--bg-color);">
-        <h2 class="text-center mb-5 text-accent">
+    <div id="coursework-spotlight" class="container-fluid py-5" style="position: relative; z-index: 50; background-color: var(--bg-color);">
+        <h2 class="display-5 fw-bolder text-uppercase text-center mb-5 text-accent" data-aos="fade-down">
             Rutgers University Coursework 
-            <img src="images/rutgers_r.png" alt="Rutgers R Logo" style="height: 40px; vertical-align: middle;">
-    </h2>
+            <img src="images/rutgers_r.png" alt="Rutgers R Logo" style="height: 40px; vertical-align: middle; margin-left: 10px;">
+        </h2>
+        
         <div class="row text-center">
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="0">
                 <div class="profile-card p-4 h-100">
                     <i class="fas fa-sitemap fa-3x mb-3 text-accent"></i>
                     <h4 class="text-accent">Data Structures</h4>
                     <p class="text-white-50">Mastered Hash Tables, BSTs, Heaps, and Big-O analysis.</p>
                 </div>
             </div>
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
                 <div class="profile-card p-4 h-100">
                     <i class="fas fa-microchip fa-3x mb-3 text-accent"></i>
                     <h4 class="text-accent">Computer Architecture</h4>
                     <p class="text-white-50">Assembly Language, Memory Management, and CPU Datapath logic.</p>
                 </div>
             </div>
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
                 <div class="profile-card p-4 h-100">
                     <i class="fas fa-vector-square fa-3x mb-3 text-accent"></i>
                     <h4 class="text-accent">Linear Algebra</h4>
@@ -134,18 +139,18 @@
     </div>
 
     <div id="skills-section" class="container-fluid py-5" style="position: relative; z-index: 50; background-color: var(--bg-color);">
-        <h2 class="text-center mb-5 text-accent">Core Technical Skills</h2>
+        <h2 class="text-center mb-5 text-accent display-5 fw-bolder text-uppercase" data-aos="fade-down">Core Technical Skills</h2>
         <div class="row text-center justify-content-center">
-            <div class="col-4 col-md-2 mb-4"><i class="devicon-c-plain text-accent" style="font-size: 4rem;"></i><p class="mt-2 text-white-50">C</p></div>
-            <div class="col-4 col-md-2 mb-4"><i class="devicon-java-plain text-accent" style="font-size: 4rem;"></i><p class="mt-2 text-white-50">Java</p></div>
-            <div class="col-4 col-md-2 mb-4"><i class="devicon-python-plain text-accent" style="font-size: 4rem;"></i><p class="mt-2 text-white-50">Python</p></div>
-            <div class="col-4 col-md-2 mb-4"><i class="devicon-git-plain text-accent" style="font-size: 4rem;"></i><p class="mt-2 text-white-50">Git</p></div>
+            <div class="col-4 col-md-2 mb-4" data-aos="zoom-in"><i class="devicon-c-plain text-accent" style="font-size: 4rem;"></i><p class="mt-2 text-accent">C</p></div>
+            <div class="col-4 col-md-2 mb-4" data-aos="zoom-in" data-aos-delay="100"><i class="devicon-java-plain text-accent" style="font-size: 4rem;"></i><p class="mt-2 text-accent">Java</p></div>
+            <div class="col-4 col-md-2 mb-4" data-aos="zoom-in" data-aos-delay="200"><i class="devicon-python-plain text-accent" style="font-size: 4rem;"></i><p class="mt-2 text-accent">Python</p></div>
+            <div class="col-4 col-md-2 mb-4" data-aos="zoom-in" data-aos-delay="300"><i class="devicon-git-plain text-accent" style="font-size: 4rem;"></i><p class="mt-2 text-accent">Git</p></div>
         </div>
     </div>
 
     <div class="container py-5 text-center" style="position: relative; z-index: 50; background-color: var(--bg-color);">
-        <h2 class="text-accent">Get In Touch</h2>
-        <p class="text-white-50 mb-4">Ready to collaborate on new projects.</p>
+        <h2 class="text-accent mb-4">Get In Touch</h2>
+        <p class="text-accent mb-4">Ready to collaborate on new projects.</p>
         <div>
             <a href="#" class="btn-outline-custom mx-2"><i class="fab fa-linkedin"></i> LinkedIn</a>
             <a href="#" class="btn-outline-custom mx-2"><i class="fab fa-github"></i> GitHub</a>
