@@ -170,3 +170,17 @@ h1, h2, h3, h4, .text-accent { color: var(--accent-color) !important; transition
 .photo-frame:hover .photo-caption {
     opacity: 1;
 }
+
+
+/* EMERGENCY VISIBILITY FIX */
+[data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
+}
+
+/* Ensure text sits on top of the canvas */
+.hero-section .container {
+    position: relative;
+    z-index: 5;
+}
