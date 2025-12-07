@@ -132,11 +132,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const images = []; 
         const imageSeq = { frame: 0 };
 
-        // 1. PRELOAD IMAGES
+      // 1. PRELOAD IMAGES
         for (let i = 1; i <= frameCount; i++) {
             const img = new Image();
-            const num = i.toString().padStart(3, '0'); 
-            img.src = `images/sequence/frame_${num}.jpg`; 
+            // *** UPDATED LINE ***
+            // This constructs the path "images/sequence/1.jpg", "images/sequence/2.jpg", etc.
+            img.src = `images/sequence/${i}.jpg`; 
             images.push(img);
         }
 
