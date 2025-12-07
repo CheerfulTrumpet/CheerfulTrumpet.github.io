@@ -1,9 +1,6 @@
 /* ==========================================================================
    1. GLOBAL THEME FUNCTIONS 
-   (These must be outside the DOMContentLoaded listener to work with HTML buttons)
    ========================================================================== */
-
-// Toggle the settings panel visibility
 window.toggleThemeMenu = function() {
     const panel = document.getElementById('control-panel');
     if (panel.style.display === 'none' || panel.style.display === '') {
@@ -13,17 +10,14 @@ window.toggleThemeMenu = function() {
     }
 };
 
-// Handle real-time color changes
 window.changeTheme = function(type, color) {
     const root = document.documentElement;
     if (type === 'accent') {
         root.style.setProperty('--accent-color', color);
-        // Create a faint version of the accent for borders
         root.style.setProperty('--card-border', color + '20');
     } 
     else if (type === 'secondary') {
         root.style.setProperty('--secondary-color', color);
-        // Update particles immediately if they exist
         if (window.particlesArray) {
             window.particlesArray.forEach(p => p.color = color);
         }
@@ -33,34 +27,27 @@ window.changeTheme = function(type, color) {
     }
 };
 
-
 /* ==========================================================================
-   2. MAIN PAGE LOGIC (Everything else happens here)
+   2. MAIN PAGE LOGIC 
    ========================================================================== */
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* --- PRIORITY 1: INITIALIZE ANIMATIONS (AOS) --- */
+    /* --- PRIORITY 1: ANIMATION INIT (AOS) --- */
     if (typeof AOS !== 'undefined') {
-        AOS.init({
-            duration: 1000,
-            once: true,
-            mirror: false
-        });
+        AOS.init({ duration: 1000, once: true, mirror: false });
     }
 
-    /* --- PRIORITY 2: CLOCK & GREETING --- */
+    /* --- PRIORITY 2: CLOCK --- */
     function updateTimeAndGreeting() {
         const now = new Date();
         const seconds = now.getSeconds();
         const minutes = now.getMinutes();
         const hours = now.getHours();
         
-        // Calculate angles
         const secondsDegrees = ((seconds / 60) * 360);
         const minutesDegrees = ((minutes / 60) * 360) + ((seconds/60)*6);
         const hoursDegrees = ((hours / 12) * 360) + ((minutes/60)*30);
 
-        // Rotate Hands
         const sHand = document.getElementById('second-hand');
         const mHand = document.getElementById('minute-hand');
         const hHand = document.getElementById('hour-hand');
@@ -69,14 +56,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if(mHand) mHand.style.transform = `translateX(-50%) rotate(${minutesDegrees}deg)`;
         if(hHand) hHand.style.transform = `translateX(-50%) rotate(${hoursDegrees}deg)`;
 
-        // Update Digital Text
         const displayMin = minutes < 10 ? '0' + minutes : minutes;
         const displayHour = hours % 12 || 12; 
         const ampm = hours >= 12 ? 'PM' : 'AM';
+        
         const dTime = document.getElementById('digital-time');
         if(dTime) dTime.innerText = `${displayHour}:${displayMin} ${ampm}`;
 
-        // Update Greeting Text based on time of day
         const greetingElement = document.getElementById('greeting');
         if(greetingElement) {
             let greetingText = "Welcome";
@@ -86,12 +72,10 @@ document.addEventListener('DOMContentLoaded', () => {
             greetingElement.innerText = greetingText;
         }
     }
-    // Run immediately, then every second
     updateTimeAndGreeting();
     setInterval(updateTimeAndGreeting, 1000);
 
-
-    /* --- PRIORITY 3: TYPEWRITER EFFECT --- */
+    /* --- PRIORITY 3: TYPEWRITER --- */
     const typeElement = document.getElementById("typewriter");
     if (typeElement) {
         const words = ["CS Student.", "Problem Solver.", "C Developer.", "Tech Enthusiast."];
@@ -104,25 +88,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const state = typeElement.getAttribute("data-state");
 
             if (state === "deleting") {
-                // Remove a character
                 typeElement.innerText = currentWord.substring(0, fullText.length - 1);
                 timer = setTimeout(typeWriter, 50);
-                
-                // If word is gone, switch to typing next word
                 if (typeElement.innerText === "") {
                     typeElement.setAttribute("data-state", "typing");
                     wordIndex++;
                 }
             } else {
-                // Add a character
                 typeElement.innerText = currentWord.substring(0, fullText.length + 1);
                 timer = setTimeout(typeWriter, 150);
-                
-                // If word is complete, wait then delete
                 if (typeElement.innerText === currentWord) {
                     typeElement.setAttribute("data-state", "deleting");
                     clearTimeout(timer);
-                    timer = setTimeout(typeWriter, 2000); // Pause at end of word
+                    timer = setTimeout(typeWriter, 2000); 
                 }
             }
         }
@@ -130,16 +108,12 @@ document.addEventListener('DOMContentLoaded', () => {
         typeWriter();
     }
 
-
-    /* --- PRIORITY 4: PARTICLE BACKGROUND SYSTEM --- */
+    /* --- PRIORITY 4: PARTICLES --- */
     const canvas = document.getElementById("background-canvas");
     if (canvas) {
         const ctx = canvas.getContext("2d");
-        
-        // Set canvas size
         canvas.width = canvas.parentElement.offsetWidth;
         canvas.height = canvas.parentElement.offsetHeight;
-
         window.particlesArray = [];
 
         class Particle {
@@ -149,8 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.directionX = (Math.random() * 1) - 0.5;
                 this.directionY = (Math.random() * 1) - 0.5;
                 this.size = (Math.random() * 2) + 1;
-                
-                // Get color from CSS variable
                 const cssColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim();
                 this.color = cssColor || '#bfbfbf'; 
             }
@@ -161,10 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 ctx.fill();
             }
             update() {
-                // Bounce off edges
                 if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
                 if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
-                
                 this.x += this.directionX;
                 this.y += this.directionY;
                 this.draw();
@@ -173,7 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function initParticles() {
             window.particlesArray = [];
-            // Calculate number of particles based on screen area
             let numberOfParticles = (canvas.height * canvas.width) / 9000;
             for (let i = 0; i < numberOfParticles; i++) {
                 window.particlesArray.push(new Particle());
@@ -183,7 +152,6 @@ document.addEventListener('DOMContentLoaded', () => {
         function animateParticles() {
             requestAnimationFrame(animateParticles);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
             for (let i = 0; i < window.particlesArray.length; i++) {
                 window.particlesArray[i].update();
             }
@@ -193,11 +161,8 @@ document.addEventListener('DOMContentLoaded', () => {
         function connectParticles() {
             for (let a = 0; a < window.particlesArray.length; a++) {
                 for (let b = a; b < window.particlesArray.length; b++) {
-                    // Pythagorean theorem for distance
                     let distance = ((window.particlesArray[a].x - window.particlesArray[b].x) ** 2)
                                  + ((window.particlesArray[a].y - window.particlesArray[b].y) ** 2);
-                    
-                    // If close enough, draw a line
                     if (distance < (canvas.width/7) * (canvas.height/7)) {
                         ctx.strokeStyle = window.particlesArray[a].color; 
                         ctx.lineWidth = 1;
@@ -210,19 +175,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Handle Window Resize
         window.addEventListener('resize', function() {
             canvas.width = canvas.parentElement.offsetWidth;
             canvas.height = canvas.parentElement.offsetHeight;
             initParticles();
         });
-
         initParticles();
         animateParticles();
     }
 
-
-    /* --- PRIORITY 5: SMOOTH SCROLL SEQUENCE ANIMATION (FIXED) --- */
+    /* --- PRIORITY 5: SCROLL SEQUENCE (MOUSE FIX APPLIED) --- */
     const scrollContainer = document.getElementById('scroll-sequence-container');
     const scrollCanvas = document.getElementById('scroll-canvas');
     
@@ -231,37 +193,29 @@ document.addEventListener('DOMContentLoaded', () => {
         const frameCount = 20; 
         const images = []; 
         
-        // --- NEW STATE FOR SMOOTHING ---
-        let currentFrame = 0; // The frame we are currently showing (can be 1.5, 1.6 etc)
-        let targetFrame = 0;  // The frame the scrollbar says we SHOULD be at
-        let isLoaded = false; // Flag to check if images are ready
+        let currentFrame = 0; 
+        let targetFrame = 0;  
 
-        // Render Function
+        // RENDER FUNCTION
         const render = (frameIndex) => {
-            // Fill background
             const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim();
             context.fillStyle = bgColor;
             context.fillRect(0, 0, scrollCanvas.width, scrollCanvas.height);
 
-            // Calculate exact integer frame
-            const index = Math.round(frameIndex);
+            const index = Math.round(frameIndex); // Round to nearest integer
 
             if (images[index] && images[index].complete) {
                 const img = images[index];
-                
-                // Contain Scaling
                 const hRatio = scrollCanvas.width / img.width;
                 const vRatio = scrollCanvas.height / img.height;
                 const ratio = Math.min(hRatio, vRatio); 
-                
                 const centerShift_x = (scrollCanvas.width - img.width * ratio) / 2;
                 const centerShift_y = (scrollCanvas.height - img.height * ratio) / 2;
-                
                 context.drawImage(img, 0, 0, img.width, img.height, centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
             } 
         };
 
-        // 1. Resize Listener
+        // RESIZE
         const resizeScrollCanvas = () => {
             scrollCanvas.width = window.innerWidth;
             scrollCanvas.height = window.innerHeight;
@@ -270,21 +224,15 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('resize', resizeScrollCanvas);
         resizeScrollCanvas();
 
-        // 2. Load Images
-        let imagesLoadedCount = 0;
+        // LOAD IMAGES
         for (let i = 1; i <= frameCount; i++) {
             const img = new Image();
             img.src = `images/sequence/${i}-removebg-preview.png`; 
-            
-            img.onload = () => {
-                imagesLoadedCount++;
-                if (imagesLoadedCount === frameCount) isLoaded = true;
-                if (i === 1) render(0); 
-            };
+            img.onload = () => { if (i === 1) render(0); };
             images.push(img);
         }
 
-        // 3. Scroll Listener (UPDATES TARGET ONLY)
+        // SCROLL LISTENER (SETS TARGET)
         window.addEventListener('scroll', () => {
             const rect = scrollContainer.getBoundingClientRect();
             const scrollTop = -rect.top;
@@ -294,43 +242,41 @@ document.addEventListener('DOMContentLoaded', () => {
             if (scrollFraction < 0) scrollFraction = 0;
             if (scrollFraction > 1) scrollFraction = 1;
 
-            // Set the TARGET frame based on scroll
             targetFrame = Math.min(frameCount - 1, Math.ceil(scrollFraction * frameCount));
         });
 
-        // 4. Animation Loop (INTERPOLATION / LERP)
-        // This makes the 'current' frame chase the 'target' frame smoothly
+        // ANIMATION LOOP (INTERPOLATION WITH SPEED LIMIT)
         const smoothAnimationLoop = () => {
-            // "Lerp" (Linear Interpolation) formula:
-            // current = current + (target - current) * smoothFactor
-            // 0.1 means it moves 10% of the way there every frame
             const diff = targetFrame - currentFrame;
             
-            // If the difference is significant, update and render
+            // Only update if visually noticeable
             if (Math.abs(diff) > 0.05) {
-                currentFrame += diff * 0.1; // Adjust 0.1 to change speed (lower = smoother/slower)
+                // 1. Calculate the jump size (Lerp with 0.05 factor for heaviness)
+                let step = diff * 0.05;
+
+                // 2. SPEED LIMIT: Clamp the step so it never jumps more than 0.8 frames at once
+                // This ensures we see the in-between frames even on fast mouse scrolls
+                if (step > 0.8) step = 0.8;
+                if (step < -0.8) step = -0.8;
+
+                currentFrame += step;
                 render(currentFrame);
             }
-            
             requestAnimationFrame(smoothAnimationLoop);
         };
-        
-        // Start the smooth loop
         smoothAnimationLoop();
     }
 
-
-    /* --- PRIORITY 6: RANDOM FOOTER QUOTE --- */
+    /* --- PRIORITY 6: FOOTER QUOTE --- */
     const quoteElement = document.getElementById("philosophy-quote");
     if(quoteElement) {
         const quotes = [
             "The question of whether a computer can think is no more interesting than the question of whether a submarine can swim. - Dijkstra",
             "It is not enough to have a good mind; the main thing is to use it well. - Descartes",
             "Simplicity is the ultimate sophistication. - Da Vinci",
-            "Code is like humor. When you have to explain it, it’s bad. - Cory House",
-            "First, solve the problem. Then, write the code. - John Johnson"
+            "Code is like humor. When you have to explain it, it’s bad. - Cory House"
         ];
         quoteElement.innerText = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`;
     }
 
-}); // <--- END OF DOMCONTENTLOADED
+}); // END DOMCONTENTLOADED
