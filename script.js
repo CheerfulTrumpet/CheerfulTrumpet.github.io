@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /* =========================================
-       PRIORITY 4: SCROLL SEQUENCE (FIXED VARIABLES)
+       PRIORITY 4: SCROLL SEQUENCE (FIXED BG)
        ========================================= */
     const scrollContainer = document.getElementById('scroll-sequence-container');
     const scrollCanvas = document.getElementById('scroll-canvas');
@@ -211,9 +211,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // --- STEP 1: DEFINE RENDER FUNCTION ---
         const render = () => {
-            context.clearRect(0, 0, scrollCanvas.width, scrollCanvas.height);
+            // *** FIX: Fill canvas with theme color instead of clearing to transparent ***
+            const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim();
+            context.fillStyle = bgColor;
+            context.fillRect(0, 0, scrollCanvas.width, scrollCanvas.height);
 
-            // Ensure variables are declared outside conditional to avoid ReferenceError
+            // Ensure variables are declared outside conditional
             let img = null;
             let centerShift_x = 0;
             let centerShift_y = 0;
@@ -224,20 +227,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (images[imageSeq.frame] && images[imageSeq.frame].complete && images[imageSeq.frame].naturalWidth !== 0) {
                 img = images[imageSeq.frame];
                 
-                // *** SCALING LOGIC: CONTAIN ***
+                // SCALING: CONTAIN
                 hRatio = scrollCanvas.width / img.width;
                 vRatio = scrollCanvas.height / img.height;
-                ratio = Math.min(hRatio, vRatio); // Use Math.min to contain
+                ratio = Math.min(hRatio, vRatio); 
                 
                 centerShift_x = (scrollCanvas.width - img.width * ratio) / 2;
                 centerShift_y = (scrollCanvas.height - img.height * ratio) / 2;
                 
                 context.drawImage(img, 0, 0, img.width, img.height, centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
             } else {
-                // FALLBACK TEXT
-                const rectW = 600; const rectH = 300;
-                context.fillStyle = "rgba(128, 128, 128, 0.1)";
-                context.fillRect((scrollCanvas.width/2)-(rectW/2), (scrollCanvas.height/2)-(rectH/2), rectW, rectH);
+                // FALLBACK TEXT (If images aren't loaded yet)
                 context.font = 'bold 40px Segoe UI';
                 context.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
                 context.textAlign = 'center';
@@ -257,12 +257,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- STEP 3: LOAD IMAGES ---
         for (let i = 1; i <= frameCount; i++) {
             const img = new Image();
-            // Using your structure: images/sequence/1.jpg
             img.src = `images/sequence/${i}.jpg`; 
             
             img.onload = () => {
                 imagesLoaded++;
-                if (i === 1) render(); // Draw first frame immediately
+                if (i === 1) render(); 
             };
             img.onerror = () => { 
                 console.log("Missing file: " + img.src); 
