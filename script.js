@@ -30,18 +30,34 @@ window.changeTheme = function(type, color) {
 /* ==========================================================================
    2. MAIN PAGE LOGIC 
    ========================================================================== */
+/* ==========================================================================
+   2. MAIN PAGE LOGIC 
+   ========================================================================== */
 document.addEventListener('DOMContentLoaded', () => {
 
     /* --- PRIORITY 1: ANIMATION INIT (AOS) --- */
-    // This turns the animations ON
     if (typeof AOS !== 'undefined') {
-        AOS.init({
-            duration: 1000, // Animation speed (1 second)
-            once: true,     // Only animate once (don't fade out when scrolling up)
-            mirror: false,
-            offset: 100     // Start animation when element is 100px from bottom
-        });
+        AOS.init({ duration: 1000, once: true, mirror: false });
     }
+
+    /* --- NEW: THEME NOTIFICATION TOAST --- */
+    const toastElement = document.getElementById('themeToast');
+    if (toastElement) {
+        // We use the Bootstrap 5 Toast API
+        // 'delay' is simpler here: we just use setTimeout for the initial pop
+        const toast = new bootstrap.Toast(toastElement);
+        
+        // check if user has already seen it (Optional: Remove this 'if' to show every time)
+        if (!localStorage.getItem('themeNotificationSeen')) {
+            setTimeout(() => {
+                toast.show();
+                // Remember that we showed it so we don't annoy them next time
+                localStorage.setItem('themeNotificationSeen', 'true'); 
+            }, 3000); // Wait 3 seconds before showing
+        }
+    }
+
+    // ... rest of your code (Clock, Typewriter, etc.) ...
 
     // ... rest of your code ...
 
