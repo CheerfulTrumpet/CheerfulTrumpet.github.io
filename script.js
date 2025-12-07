@@ -1,5 +1,5 @@
 /* ------------------------------------------------
-   1. GLOBAL THEME FUNCTIONS (Must be at the top)
+   1. GLOBAL THEME FUNCTIONS (Called from HTML)
    ------------------------------------------------ */
 
 // Toggle the Menu Open/Close
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.directionY = (Math.random() * 1) - 0.5;
                 this.size = (Math.random() * 2) + 1;
                 const cssColor = getComputedStyle(document.documentElement).getPropertyValue('--secondary-color').trim();
-                this.color = cssColor || '#45a29e'; 
+                this.color = cssColor || '#bfbfbf'; 
             }
             draw() {
                 ctx.beginPath();
@@ -121,6 +121,86 @@ document.addEventListener('DOMContentLoaded', () => {
         init();
         animate();
     }
+
+    /* --- SCROLL SEQUENCE --- */
+    const scrollContainer = document.getElementById('scroll-sequence-container');
+    const scrollCanvas = document.getElementById('scroll-canvas');
+    
+    if (scrollContainer && scrollCanvas) {
+        const context = scrollCanvas.getContext('2d');
+        const frameCount = 28; 
+        const images = []; 
+        const imageSeq = { frame: 0 };
+
+        // 1. PRELOAD IMAGES
+        for (let i = 1; i <= frameCount; i++) {
+            const img = new Image();
+            const num = i.toString().padStart(3, '0'); 
+            img.src = `images/sequence/frame_${num}.jpg`; 
+            images.push(img);
+        }
+
+        const resizeCanvas = () => {
+            scrollCanvas.width = window.innerWidth;
+            scrollCanvas.height = window.innerHeight;
+            render();
+        };
+        
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // 2. RENDER FUNCTION
+        const render = () => {
+            if (images[imageSeq.frame]) {
+                const img = images[imageSeq.frame];
+                
+                const hRatio = scrollCanvas.width / img.width;
+                const vRatio = scrollCanvas.height / img.height;
+                const ratio = Math.max(hRatio, vRatio);
+                
+                const centerShift_x = (scrollCanvas.width - img.width * ratio) / 2;
+                const centerShift_y = (scrollCanvas.height - img.height * ratio) / 2;
+
+                context.clearRect(0, 0, scrollCanvas.width, scrollCanvas.height);
+                context.drawImage(
+                    img, 
+                    0, 0, img.width, img.height, 
+                    centerShift_x, centerShift_y, img.width * ratio, img.height * ratio 
+                );
+            } else {
+                 // Placeholder for when images are still loading (Frame 0)
+                context.font = 'bold 80px Segoe UI';
+                context.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
+                context.textAlign = 'center';
+                context.fillText(`Loading Frames...`, scrollCanvas.width / 2, scrollCanvas.height / 2);
+            }
+        };
+
+        images[0].onload = render; // Draw first frame when ready
+
+        // 3. SCROLL LISTENER
+        window.addEventListener('scroll', () => {
+            const rect = scrollContainer.getBoundingClientRect();
+            const scrollTop = -rect.top;
+            const maxScroll = scrollContainer.offsetHeight - window.innerHeight;
+            
+            let scrollFraction = scrollTop / maxScroll;
+            
+            if (scrollFraction < 0) scrollFraction = 0;
+            if (scrollFraction > 1) scrollFraction = 1;
+
+            const frameIndex = Math.min(
+                frameCount - 1,
+                Math.ceil(scrollFraction * frameCount)
+            );
+            
+            if (imageSeq.frame !== frameIndex) {
+                imageSeq.frame = frameIndex;
+                requestAnimationFrame(render);
+            }
+        });
+    }
+
 
     /* --- TYPEWRITER --- */
     const words = ["CS Student.", "Problem Solver.", "C Developer.", "Tech Enthusiast."];
