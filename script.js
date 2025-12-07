@@ -32,10 +32,10 @@ window.changeTheme = function(type, color) {
    ------------------------------------------------ */
 document.addEventListener('DOMContentLoaded', () => {
     
-    // Initialize Animations (Wrapped in try-catch to prevent crashing)
+    // Initialize Animations
     try {
         if(typeof AOS !== 'undefined') AOS.init();
-    } catch (e) { console.log("AOS Error", e); }
+    } catch (e) { console.log("AOS Init Error", e); }
 
     /* =========================================
        PRIORITY 1: CLOCK 
@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /* =========================================
-       PRIORITY 4: SCROLL SEQUENCE (FIXED SCALING & ORDER)
+       PRIORITY 4: SCROLL SEQUENCE (FIXED ORDER & SCALING)
        ========================================= */
     const scrollContainer = document.getElementById('scroll-sequence-container');
     const scrollCanvas = document.getElementById('scroll-canvas');
@@ -209,19 +209,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const imageSeq = { frame: 0 };
         let imagesLoaded = 0;
 
-        // --- STEP 1: DEFINE RENDER FUNCTION FIRST ---
+        // --- STEP 1: DEFINE THE RENDER FUNCTION FIRST ---
+        // This function must exist before we try to use it in resizeCanvas
         const render = () => {
             context.clearRect(0, 0, scrollCanvas.width, scrollCanvas.height);
 
             if (images[imageSeq.frame] && images[imageSeq.frame].complete && images[imageSeq.frame].naturalWidth !== 0) {
                 const img = images[imageSeq.frame];
                 
-                // *** FIXED SCALING LOGIC: CONTAIN (Show Whole Image) ***
+                // *** SCALING LOGIC: CONTAIN ***
+                // Math.min ensures the entire image fits (no cropping)
                 const hRatio = scrollCanvas.width / img.width;
                 const vRatio = scrollCanvas.height / img.height;
-                
-                // Use Math.min to ensure the whole image fits (contain)
-                const ratio = Math.min(hRatio, vRatio);
+                const ratio = Math.min(hRatio, vRatio); 
                 
                 // Center the image
                 const centerShift_x = (scrollCanvas.width - img.width * ratio) / 2;
@@ -229,22 +229,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 context.drawImage(img, 0, 0, img.width, img.height, centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
             } else {
-                // Fallback Text
+                // FALLBACK
                 const rectW = 600; const rectH = 300;
                 context.fillStyle = "rgba(128, 128, 128, 0.1)";
                 context.fillRect((scrollCanvas.width/2)-(rectW/2), (scrollCanvas.height/2)-(rectH/2), rectW, rectH);
                 context.font = 'bold 40px Segoe UI';
                 context.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim();
                 context.textAlign = 'center';
-                context.fillText("Loading Sequence...", scrollCanvas.width / 2, scrollCanvas.height / 2);
+                context.fillText("Loading...", scrollCanvas.width / 2, scrollCanvas.height / 2);
             }
         };
 
-        // --- STEP 2: RESIZE LISTENER ---
+        // --- STEP 2: DEFINE RESIZE LOGIC ---
         const resizeCanvas = () => {
             scrollCanvas.width = window.innerWidth;
             scrollCanvas.height = window.innerHeight;
-            render();
+            render(); // Now render is defined, so this works!
         };
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
@@ -252,17 +252,19 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- STEP 3: LOAD IMAGES ---
         for (let i = 1; i <= frameCount; i++) {
             const img = new Image();
+            // Using your structure: images/sequence/1.jpg
             img.src = `images/sequence/${i}.jpg`; 
             
             img.onload = () => {
                 imagesLoaded++;
-                if (i === 1) render();
+                if (i === 1) render(); // Draw first frame immediately
             };
-            img.onerror = () => { console.log("Missing: " + img.src); };
+            img.onerror = () => { 
+                console.log("Missing file: " + img.src); 
+                render(); 
+            };
             images.push(img);
         }
-
-        render();
 
         // --- STEP 4: SCROLL LISTENER ---
         window.addEventListener('scroll', () => {
