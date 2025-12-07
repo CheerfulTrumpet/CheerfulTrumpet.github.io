@@ -32,7 +32,10 @@ window.changeTheme = function(type, color) {
    ------------------------------------------------ */
 document.addEventListener('DOMContentLoaded', () => {
     
-    if(typeof AOS !== 'undefined') AOS.init();
+    // Initialize Animations (Wrapped in try-catch to prevent crashing)
+    try {
+        if(typeof AOS !== 'undefined') AOS.init();
+    } catch (e) { console.log("AOS Error", e); }
 
     /* =========================================
        PRIORITY 1: CLOCK 
@@ -194,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /* =========================================
-       PRIORITY 4: SCROLL SEQUENCE (FIXED ORDER)
+       PRIORITY 4: SCROLL SEQUENCE (FIXED SCALING & ORDER)
        ========================================= */
     const scrollContainer = document.getElementById('scroll-sequence-container');
     const scrollCanvas = document.getElementById('scroll-canvas');
@@ -206,21 +209,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const imageSeq = { frame: 0 };
         let imagesLoaded = 0;
 
-        // --- STEP 1: DEFINE THE RENDER FUNCTION FIRST ---
+        // --- STEP 1: DEFINE RENDER FUNCTION FIRST ---
         const render = () => {
             context.clearRect(0, 0, scrollCanvas.width, scrollCanvas.height);
 
-            // CHECK: Do we have a valid image?
             if (images[imageSeq.frame] && images[imageSeq.frame].complete && images[imageSeq.frame].naturalWidth !== 0) {
                 const img = images[imageSeq.frame];
+                
+                // *** FIXED SCALING LOGIC: CONTAIN (Show Whole Image) ***
                 const hRatio = scrollCanvas.width / img.width;
                 const vRatio = scrollCanvas.height / img.height;
-               const ratio = Math.min(hRatio, vRatio); // Use MIN to ensure the entire image is contained                const centerShift_x = (scrollCanvas.width - img.width * ratio) / 2;
+                
+                // Use Math.min to ensure the whole image fits (contain)
+                const ratio = Math.min(hRatio, vRatio);
+                
+                // Center the image
+                const centerShift_x = (scrollCanvas.width - img.width * ratio) / 2;
                 const centerShift_y = (scrollCanvas.height - img.height * ratio) / 2;
                 
                 context.drawImage(img, 0, 0, img.width, img.height, centerShift_x, centerShift_y, img.width * ratio, img.height * ratio);
             } else {
-                // FALLBACK VISUALS
+                // Fallback Text
                 const rectW = 600; const rectH = 300;
                 context.fillStyle = "rgba(128, 128, 128, 0.1)";
                 context.fillRect((scrollCanvas.width/2)-(rectW/2), (scrollCanvas.height/2)-(rectH/2), rectW, rectH);
@@ -231,11 +240,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // --- STEP 2: DEFINE RESIZE LOGIC (NOW IT CAN FIND 'RENDER') ---
+        // --- STEP 2: RESIZE LISTENER ---
         const resizeCanvas = () => {
             scrollCanvas.width = window.innerWidth;
             scrollCanvas.height = window.innerHeight;
-            render(); // This is safe now because render is defined above!
+            render();
         };
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
@@ -243,16 +252,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- STEP 3: LOAD IMAGES ---
         for (let i = 1; i <= frameCount; i++) {
             const img = new Image();
-            img.src = `images/sequence/${i}.jpg`; // Tries to find 1.jpg, 2.jpg...
+            img.src = `images/sequence/${i}.jpg`; 
             
             img.onload = () => {
                 imagesLoaded++;
-                if (i === 1) render(); // Once frame 1 loads, draw it
+                if (i === 1) render();
             };
-            img.onerror = () => { 
-                console.log("Image fail: " + img.src); 
-                render(); 
-            };
+            img.onerror = () => { console.log("Missing: " + img.src); };
             images.push(img);
         }
 
