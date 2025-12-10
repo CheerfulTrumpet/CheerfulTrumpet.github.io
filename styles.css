@@ -38,7 +38,7 @@ body {
 
 /* SCROLL SEQUENCE ANIMATION */
 #scroll-sequence-container {
-    height: 120vh; /* Keeps it present but not huge */
+    height: 20vh; /* Keeps it present but not huge */
     background-color: var(--bg-color);
     position: relative;
 }
