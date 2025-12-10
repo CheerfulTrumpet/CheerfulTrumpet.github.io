@@ -216,3 +216,22 @@ h1, h2, h3, h4, .text-accent { color: var(--accent-color) !important; transition
     width: 0;
     z-index: 11001;
 }
+
+/* WAVE TEXT ANIMATION */
+@keyframes wave-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* This class will apply the animation */
+.wave-text {
+    display: inline-block; /* Required for transform to work on text spans */
+    animation: wave-bounce 2s infinite ease-in-out;
+}
+
+/* Add delays so letters/words don't all bounce at once */
+.wave-text:nth-child(1) { animation-delay: 0.0s; }
+.wave-text:nth-child(2) { animation-delay: 0.1s; }
+.wave-text:nth-child(3) { animation-delay: 0.2s; }
+.wave-text:nth-child(4) { animation-delay: 0.3s; }
+.wave-text:nth-child(5) { animation-delay: 0.4s; }
